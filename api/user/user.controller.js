@@ -1,5 +1,5 @@
-const userService = require('./user.service')
-const logger = require('../../services/logger.service')
+import { userService } from '../services/user.service.js'
+import { logger } from '../services/logger.service.js'
 
 async function getUser(req, res) {
     try {

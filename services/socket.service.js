@@ -1,4 +1,4 @@
-const logger = require('./logger.service')
+import {logger} from '../services/logger.service.js'
 
 let gIo = null
 

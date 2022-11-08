@@ -1,6 +1,6 @@
-const fs = require('fs')
-const asyncLocalStorage = require('./als.service')
-const utilService = require('./util.service')
+import fs from 'fs'
+import {asyncLocalStorage} from './als.service.js'
+import {utilService} from './util.service.js' 
 
 
 const logsDir = './logs'

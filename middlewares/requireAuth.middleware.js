@@ -1,5 +1,5 @@
-const authService = require('../api/auth/auth.service')
-const logger = require('../services/logger.service')
+import { authService } from '../services/auth.service.js'
+import { logger } from '../services/logger.service.js'
 
 function requireAuth(req, res, next) {
   if (!req?.cookies?.loginToken) return res.status(401).send('Not Authenticated')

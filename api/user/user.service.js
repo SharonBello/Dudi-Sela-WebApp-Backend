@@ -1,7 +1,7 @@
 
-const ObjectId = require('mongodb').ObjectId
-const dbService = require('../../services/db.service')
-const logger = require('../../services/logger.service')
+import  ObjectId   from 'mongodb'
+import { dbService } from '../../services/db.service.js'
+import { logger } from '../../services/logger.service.js'
 
 
 module.exports = {

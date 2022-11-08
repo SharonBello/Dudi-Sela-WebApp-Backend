@@ -1,5 +1,5 @@
-const authService = require('../api/auth/auth.service')
-const asyncLocalStorage = require('../services/als.service')
+import { authService } from '../services/auth.service.js'
+import { asyncLocalStorage } from '../services/als.service.js'
 
 async function setupAsyncLocalStorage(req, res, next) {
   const storage = {}
