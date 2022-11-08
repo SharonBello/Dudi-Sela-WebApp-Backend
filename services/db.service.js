@@ -1,4 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
+let providers = ['email', 'google', 'facebook', 'phone']
 
 import { config } from '../../config/config.js'
 
