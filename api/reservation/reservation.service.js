@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongodb'
 import { dbService } from '../../../../../services/dbService' 
-import { logger } from '../../../../../services/loggerService'
 import { userService } from '../../../../../services/userService'
 
 async function query(filterBy) {
@@ -19,7 +18,7 @@ async function query(filterBy) {
         // }
         return reservations
     } catch (err) {
-        logger.error('Cannot find reservations', err)
+        console.error('Cannot find reservations', err)
         throw err
     }
 }
@@ -69,7 +68,7 @@ function _buildCriteria(filterBy) {
 //             return reservations
 //         }
 //     } catch (err) {
-//         logger.error(`While counting reservations by seller id and reservation id `, err)
+//         console.error(`While counting reservations by seller id and reservation id `, err)
 //         throw err
 //     }
 // }
@@ -83,7 +82,7 @@ async function getById(reservationId) {
         const reservation = collection.findOne({ _id: ObjectId(reservationId) })        
         return reservation
     } catch (err) {
-        logger.error(`While finding reservation ${reservationId}`, err)
+        console.error(`While finding reservation ${reservationId}`, err)
         throw err
     }
 }
@@ -94,7 +93,7 @@ async function remove(reservationId) {
         await collection.deleteOne({ _id: ObjectId(reservationId) })
         return reservationId
     } catch (err) {
-        logger.error(`Cannot remove reservation ${reservationId}`, err)
+        console.error(`Cannot remove reservation ${reservationId}`, err)
         throw err
     }
 }
@@ -107,7 +106,7 @@ async function add(reservation) {
         const user = await userService.updateUserIsSeller(reservation.owner._id)
         return reservation
     } catch (err) {
-        logger.error('Cannot insert reservation', err)
+        console.error('Cannot insert reservation', err)
         throw err
     }
 }
@@ -123,22 +122,11 @@ async function edit(reservation) {
         await collection.updateOne({ _id: ObjectId(id) }, { $set: { ...reservation } })
         return reservation
     } catch (err) {
-        logger.error(`Cannot update reservation ${reservationId}`, err)
+        console.error(`Cannot update reservation ${reservationId}`, err)
         throw err
     }
 }
 
-// async function updateReservationRating(reservation, rating) {
-//     try {
-//         let id = ObjectId(reservation._id)
-//         const collection = await dbService.getCollection('reservation')
-//         const updatedReservation = await collection.updateOne({ _id: ObjectId(id) }, { $set: { ...reservation, rating: rating } })
-//         return updatedReservation
-//     } catch (err) {
-//         logger.error('Cannot updare reservation rating', err)
-//         throw err
-//     }
-// }
 
 module.exports = {
     remove,
@@ -146,6 +134,4 @@ module.exports = {
     getById,
     add,
     edit,
-    // updateReservationRating,    
-    // getOrderQty
 }

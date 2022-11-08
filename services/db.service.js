@@ -1,41 +1,30 @@
-const MongoClient = require('mongodb').MongoClient
-let providers = ['email', 'google', 'facebook', 'phone']
+// const MongoClient = require('mongodb').MongoClient
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore/lite';
+import { keyConfig } from './key.service.js'
 
-import { config } from '../../config/config.js'
+import { initializeApp } from 'firebase/app';
 
-module.exports = {
-    getCollection
-}
+const firebaseConfig = keyConfig
+const initializedFirebase = initializeApp(firebaseConfig);
+const db = getFirestore(initializedFirebase);
 
-// Database Name
-const dbName = 'AppSum'
 
-let dbConn = null
-
-async function getCollection(collectionName) {
-    try {
-        const db = await connect()
-        const collection = await db.collection(collectionName)
-        return collection
-    } catch (err) {
-        logger.error('Failed to get Mongo collection', err)
-        throw err
+async function getCollectionDocs(db, docName, docId) {
+    const docRef = doc(db, docName, docId)
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
     }
+    return docSnap.data();
 }
 
-async function connect() {
-    if (dbConn) return dbConn
-    try {
-        const client = await MongoClient.connect(config.dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
-        const db = client.db(dbName)
-        dbConn = db
-        return db
-    } catch (err) {
-        logger.error('Cannot Connect to DB', err)
-        throw err
-    }
+async function addDocument(db, docName, docId, pyaload) {
+    // Add a new document in collection "cities"
+    await setDoc(doc(db, docName, docId), payload);
 }
 
 
-
-
+export { db, getCollectionDocs, addDocument }

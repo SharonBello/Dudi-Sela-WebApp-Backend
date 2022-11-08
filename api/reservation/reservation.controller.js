@@ -1,6 +1,4 @@
 import { reservationService } from '../../../../../services/reservation.service.js'
-import { logger } from '../../../../../services/logger.service.js'
-import { utilService } from '../../../../../services/util.service.js'
 
 // GET LIST
 async function getReservations(req, res) {
@@ -9,7 +7,6 @@ async function getReservations(req, res) {
     const reservations = await reservationService.query(queryParams)
     res.send(reservations);
   } catch (err) {
-    logger.error('Failed to get reservations', err)
     res.status(500).send({ err: 'Failed to get reservations' })
   }
 }
@@ -22,7 +19,6 @@ async function getReservationById(req, res) {
     const reservation = await reservationService.getById(reservationId)
     res.json(reservation)
   } catch (err) {
-    logger.error('Failed to get reservation', err)
     res.status(500).send({ err: 'Failed to get reservation' })
   }
 }
@@ -36,7 +32,6 @@ async function addReservation(req, res) {
     const addedReservation = await reservationService.add(reservation)
     res.json(addedReservation)
   } catch (err) {
-    logger.error('Failed to add reservation', err)
     res.status(500).send({ err: 'Failed to add reservation' })
   }
 }
@@ -50,7 +45,6 @@ async function addReservation(req, res) {
 //     const addedReview = await reservationService.addUserReview(reservation, review)
 //     res.json(addedReview)
 //   } catch (err) {
-//     logger.error('Failed to add review', err)
 //     res.status(500).send({ err: 'Failed to add review' })
 //   }
 // }
@@ -64,7 +58,6 @@ async function editReservation(req, res) {
     const editReservation = await reservationService.edit(reservation)
     res.json(editReservation)
   } catch (err) {
-    logger.error('Failed to edit reservation', err)
     res.status(500).send({ err: 'Failed to edit reservation' })
   }
 }
@@ -77,7 +70,6 @@ async function editReservation(req, res) {
 //     const updatedRate = await reservationService.updateUserRating(reservation, rating)
 //     res.json(updatedRate)
 //   } catch (err) {
-//     logger.error('Failed to update reservation', err)
 //     res.status(500).send({ err: 'Failed to update reservation' })
 //   }
 // }
@@ -89,7 +81,6 @@ async function removeReservation(req, res) {
     const reservationId = req.params.id;
     await reservationService.remove(reservationId)    
   } catch (err) {
-    logger.error('Failed to remove reservation', err)
     res.status(500).send({ err: 'Failed to remove reservation' })
   }
 }

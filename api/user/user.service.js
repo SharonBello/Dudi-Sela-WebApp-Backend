@@ -1,8 +1,6 @@
 
 import  ObjectId   from 'mongodb'
 import { dbService } from '../../services/db.service.js'
-import { logger } from '../../services/logger.service.js'
-
 
 module.exports = {
     query,
@@ -26,7 +24,7 @@ async function query(filterBy = {}) {
         })
         return users
     } catch (err) {
-        logger.error('Cannot find users', err)
+        console.error('Cannot find users', err)
         throw err
     }
 }
@@ -39,7 +37,7 @@ async function getByGoogleId(googleId) {
         user.createdAt = ObjectId(user._id).getTimestamp();
         return user;
     } catch (err) {
-        logger.error(`while finding user ${userId}`, err);
+        console.error(`while finding user ${userId}`, err);
         throw err;
     }
 }
@@ -51,7 +49,7 @@ async function getById(userId) {
         delete user.password
         return user
     } catch (err) {
-        logger.error(`Cannot find user by id - ${userId}`, err)
+        console.error(`Cannot find user by id - ${userId}`, err)
         throw err
     }
 }
@@ -62,7 +60,7 @@ async function getByUsername(userName) {
         const user = await collection.findOne({ userName })
         return user
     } catch (err) {
-        logger.error(`Cannot find user by name -  ${userName}`, err)
+        console.error(`Cannot find user by name -  ${userName}`, err)
         throw err
     }
 }
@@ -92,7 +90,7 @@ async function add(user) {
 
         return userToAdd
     } catch (err) {
-        logger.error('Cannot add user', err)
+        console.error('Cannot add user', err)
         throw err
     }
 }
