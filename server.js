@@ -1,40 +1,174 @@
 import express from 'express'
 import cors from 'cors'
-import path from 'path'
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore/lite';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { keyConfig } from './services/key.service.js'
+import { v4 as uuidv4 } from 'uuid';
+import bodyParser from 'body-parser'
 
-import { getCollectionDocs, addDocument } from './services/db.service.js'
+// var bodyParser = require('body-parser')
+const firebaseConfig = keyConfig
+    
+import { initializeApp } from 'firebase/app';
+const auth = getAuth(initializeApp(firebaseConfig));
 
 const app = express();
-const port = 3000;
+app.use(bodyParser.json());
 
-app.get('/reservations/:docId', async (req, res) => {
-    //'tAjxAZkOBAdhHWHXbM7EmVpbBM72'
-    const result = await getCollectionDocs(db, 'reservations', req.params.docId)
-    console.log(result)
-    res.send(result)
+// create application/x-www-form-urlencoded parser
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(cors())
+const port = 4000;
+const initializedFirebase = initializeApp(firebaseConfig);
+const db = getFirestore(initializedFirebase);
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+});
+
+
+app.post('/signup', (req, res) => {
+    console.log(req.body.username, req.body.password)
+    createUser(req.body.username, req.body.password, (uid) => {
+        console.log(uid)
+        if (!uid) {
+            // An error happened.
+            res.end(JSON.stringify({ "result": "1" }))
+        }
+        res.end(JSON.stringify({ "uid": uid }))
+    })
+});
+
+app.post('/signin', (req, res) => {
+    console.log(req.body)
+    signinUser(req.body.username, req.body.password, (user) => {
+        console.log(user.uid)
+        if (!user.uid) {
+            // An error happened.
+            // res.write()
+            res.end(JSON.stringify({ "result": 1 }))
+        }
+        res.end(JSON.stringify({ "uid": user.uid }))
+    })
+});
+
+app.post('/signout', (req, res) => {
+    signOut(auth).then(() => {
+        // Sign-out successful.
+        res.end(JSON.stringify({ "result": 0 }))
+    }).catch((error) => {
+        // An error happened.
+        res.end(JSON.stringify({ "result": 1 }))
+    });
+});
+
+function signinUser(email, password, fn) {
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            console.log(userCredential)
+            const user = userCredential.user;
+            fn(user)
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(error)
+            fn(errorCode)
+        });
+}
+
+function createUser(email, password, fn) {
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const uid = userCredential.user.uid;
+            console.log(uid)
+            fn(uid)
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            fn(errorCode)
+        });
+}
+
+app.post('/reservations', async (req, res) => {
+    const _uuid = uuidv4();
+    const payload = {
+        'id': _uuid,
+        'startHour': req.body.startHour,
+        'endHour': req.body.endHour,
+        'courtNumber': req.body.courtNumber,
+        "date": req.body.date
+    }
+    addDocument(db, "reservations", req.query.docId, payload, (result) => {
+        if (result) {
+            // An error happened.
+            res.end(JSON.stringify({ "result": 1 }))
+        }
+        res.end(JSON.stringify({ "result": 0 }));
+    });
+});
+
+app.get('/reservations', async (req, res) => {
+    await getCollectionDocs(db, 'reservations', req.query.docId, (result) => {
+        if (!result.reservations) {
+            // An error happened.
+            res.end(JSON.stringify({ "result": 1 }))
+        }
+        res.end(JSON.stringify({ "reservations": result.reservations }));
+    })
 });
 
 app.get('/courts', async (req, res) => {
-    const docId = 'jawPTlXha948TQyBkuyP';
-    const result = await getCollectionDocs(db, 'courts', docId)
-    console.log(result)
-    res.send(result)
+    await getCollectionDocs(db, 'courts', 'jawPTlXha948TQyBkuyP', (result) => {
+        if (!result.court_numbers) {
+            // An error happened.
+            res.end(JSON.stringify({ "result": 1 }))
+        }
+        res.end(JSON.stringify({ "courts": result }));
+    })
 });
 
 app.get('/sport_center_members', async (req, res) => {
-    const docId = 'ksaAp1oIHwpb6eH6Z5Ig';
-    const result = await getCollectionDocs(db, 'sport_center_members', docId)
-    console.log(result)
-    res.send(result)
+    await getCollectionDocs(db, 'sport_center_members', 'ksaAp1oIHwpb6eH6Z5Ig', (result) => {
+        if (!result.members) {
+            // An error happened.
+            res.end(JSON.stringify({ "result": 1 }))
+        }
+        res.end(JSON.stringify({ "sport_center_members": result }));
+    })
 });
 
-app.post('/reservations', async (req, res) => {
-    await addDocument(db, "reservations", req.data.docId, req.data.payload);
-    res.send({ result: "Success" });
-});
+async function getCollectionDocs(db, docName, docId, fn) {
+    const docRef = doc(db, docName, docId)
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }
+    fn(docSnap.data());
+}
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-});
+async function addDocument(db, docName, docId, data, fn) {
+    // Add a new document
+    const docRef = doc(db, docName, docId)
+    const docSnap = await getDoc(docRef);
+    const _reservations = docSnap.data().reservations
+    _reservations.push(data);
+    console.log(_reservations)
 
-
+    setDoc(docRef, { "reservations": _reservations })
+        .then((result) => {
+            fn(result)
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            fn(errorCode)
+        });
+}
