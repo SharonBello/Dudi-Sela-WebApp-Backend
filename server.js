@@ -2,15 +2,15 @@ import express from 'express'
 import cors from 'cors'
 import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore/lite';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { keyConfig } from './services/key.service.js'
 import { v4 as uuidv4 } from 'uuid';
 import bodyParser from 'body-parser'
+import { authListener } from './services/auth_state_listener.js';
+import getFirebaseConfig from './services/key.service.js';
 
 // var bodyParser = require('body-parser')
-const firebaseConfig = keyConfig
-    
+
 import { initializeApp } from 'firebase/app';
-const auth = getAuth(initializeApp(firebaseConfig));
+const auth = getAuth(initializeApp(getFirebaseConfig()));
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,8 +19,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(cors())
+authListener();
 const port = 4000;
-const initializedFirebase = initializeApp(firebaseConfig);
+const initializedFirebase = initializeApp(getFirebaseConfig());
 const db = getFirestore(initializedFirebase);
 
 app.listen(port, () => {
@@ -45,8 +46,6 @@ app.post('/signin', (req, res) => {
     signinUser(req.body.username, req.body.password, (user) => {
         console.log(user.uid)
         if (!user.uid) {
-            // An error happened.
-            // res.write()
             res.end(JSON.stringify({ "result": 1 }))
         }
         res.end(JSON.stringify({ "uid": user.uid }))
