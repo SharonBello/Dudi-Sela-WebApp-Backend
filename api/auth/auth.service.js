@@ -3,26 +3,26 @@ import bcrypt from 'bcrypt'
 import {userService} from '../user/user.service.js'
 const cryptr = new Cryptr(process.env.SECRET1 || 'Dudi-Sela-1234')
 
-async function login(userName, password) {
-    const user = await userService.getByUsername(userName)
+async function login(email, password) {
+    const user = await userService.getByEmail(email)
 
-    if (!user) return Promise.reject('Invalid username or password')
+    if (!user) return Promise.reject('Invalid email or password')
     // un-comment for real login
     const match = await bcrypt.compare(password, user.password)
-    if (!match) return Promise.reject('Invalid username or password')
+    if (!match) return Promise.reject('Invalid email or password')
 
     delete user.password
     user._id = user._id.toString()
     return user
 }
 
-async function signup({ userName, password, fullname, imgUrl }) {
+async function signup({ email, password, fullname, imgUrl }) {
     const saltRounds = 10
-    if (!userName || !password || !fullname) return Promise.reject('Missing required signup information')
-    const userExist = await userService.getByUsername(userName)
-    if (userExist) return Promise.reject('Username already taken')
+    if (!email || !password || !fullname) return Promise.reject('Missing required signup information')
+    const userExist = await userService.getByemail(email)
+    if (userExist) return Promise.reject('email already taken')
     const hash = await bcrypt.hash(password, saltRounds)
-    return userService.add({ userName, password: hash, fullname, imgUrl })
+    return userService.add({ email, password: hash, fullname, imgUrl })
 }
 
 function getLoginToken(user) {

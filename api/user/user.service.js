@@ -5,7 +5,7 @@ import { dbService } from '../../services/db.service.js'
 module.exports = {
     query,
     getById,
-    getByUsername,
+    getByEmail,
     add,
     updateUserIsSeller,
     getByGoogleId,
@@ -53,14 +53,14 @@ async function getById(userId) {
         throw err
     }
 }
-async function getByUsername(userName) {
+async function getByEmail(email) {
 
     try {
         const collection = await dbService.getCollection('user')
-        const user = await collection.findOne({ userName })
+        const user = await collection.findOne({ email })
         return user
     } catch (err) {
-        console.error(`Cannot find user by name -  ${userName}`, err)
+        console.error(`Cannot find user by name -  ${email}`, err)
         throw err
     }
 }
@@ -70,15 +70,10 @@ async function add(user) {
     console.log('user service line 71', user)
     try {
         const userToAdd = {
-            userName: user.userName,
+            email: user.email,
             password: user.password,
             fullName: user.fullname,
             imgUrl: user.imgUrl,
-            level: 'Level 1 Seller',
-            email: user.userName + '@gmail.com',
-            avgOrdersRate: 0,
-            isSeller: false,
-            reviews: [],
             google_account: '',
             facebook_account: '',
             twitter_account: ''
@@ -99,7 +94,7 @@ async function checkIfGoogleAccount(userDeatils) {
     const collection = await dbService.getCollection('user')
     try {
         const user = await collection.findOne({
-            userName: userDeatils.userName,
+            email: userDeatils.email,
             password: userDeatils.password,
             imgUrl: userDeatils.imgUrl
         });
@@ -125,7 +120,7 @@ function _buildCriteria(filterBy) {
         const txtCriteria = { $regex: filterBy.txt, $options: 'i' }
         criteria.$or = [
             {
-                userName: txtCriteria
+                email: txtCriteria
             },
             {
                 fullName: txtCriteria

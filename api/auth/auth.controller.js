@@ -5,10 +5,10 @@ import Cryptr from 'Cryptr'
 const cryptr = new Cryptr(process.env.SECRET1 || 'Dudi-Sela-1234')
 
 async function login(req, res) {
-    const { userName, password } = req.body
+    const { email, password } = req.body
 
     try {
-        const user = await authService.login(userName, password)
+        const user = await authService.login(email, password)
         const loginToken = authService.getLoginToken(user)
         res.cookie('loginToken', loginToken)
         res.json(user)
@@ -26,7 +26,7 @@ async function signupGoogle(req, res) {
             console.log('!userExisting')    
             userService.add(credentials)
         }
-        const user = await authService.login(credentials.userName, credentials.password)
+        const user = await authService.login(credentials.email, credentials.password)
         const loginToken = authService.getLoginToken(user)
         res.cookie('loginToken', loginToken)
         res.json(user)
@@ -40,7 +40,7 @@ async function signup(req, res) {
         const credentials = req.body
         // Never log passwords
         const account = await authService.signup(credentials)
-        const user = await authService.login(credentials.userName, credentials.password)
+        const user = await authService.login(credentials.email, credentials.password)
         const loginToken = authService.getLoginToken(user)
         res.cookie('loginToken', loginToken)
         res.json(user)

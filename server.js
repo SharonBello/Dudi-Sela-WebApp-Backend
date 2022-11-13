@@ -7,8 +7,6 @@ import bodyParser from 'body-parser'
 import { authListener } from './services/auth_state_listener.js';
 import getFirebaseConfig from './services/key.service.js';
 
-// var bodyParser = require('body-parser')
-
 import { initializeApp } from 'firebase/app';
 const auth = getAuth(initializeApp(getFirebaseConfig()));
 
@@ -30,8 +28,8 @@ app.listen(port, () => {
 
 
 app.post('/signup', (req, res) => {
-    console.log(req.body.username, req.body.password)
-    createUser(req.body.username, req.body.password, (uid) => {
+    // console.log(req.body.email, req.body.password)
+    createUser(req.body.email, req.body.password, (uid) => {
         console.log(uid)
         if (!uid) {
             // An error happened.
@@ -43,7 +41,7 @@ app.post('/signup', (req, res) => {
 
 app.post('/signin', (req, res) => {
     console.log(req.body)
-    signinUser(req.body.username, req.body.password, (user) => {
+    signinUser(req.body.email, req.body.password, (user) => {
         console.log(user.uid)
         if (!user.uid) {
             res.end(JSON.stringify({ "result": 1 }))
@@ -56,6 +54,7 @@ app.post('/signout', (req, res) => {
     signOut(auth).then(() => {
         // Sign-out successful.
         res.end(JSON.stringify({ "result": 0 }))
+        console.log("Sign-out successful.");
     }).catch((error) => {
         // An error happened.
         res.end(JSON.stringify({ "result": 1 }))
