@@ -16,16 +16,24 @@ app.use(bodyParser.json());
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(express.static('public'));
 app.use(cors())
 authListener();
-const port = 4000;
+// const port = 4000;
+const port = process.env.PORT || 4000;
 const initializedFirebase = initializeApp(getFirebaseConfig());
 const db = getFirestore(initializedFirebase);
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-});
+// app.listen(port, () => {
+//     console.log(`Example app listening on port ${port}`)
+// });
+app.get('/**', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
 
+app.listen(port, () => {
+    console.log(`App listening on port ${port}!`)
+});
 
 app.post('/signup', (req, res) => {
     // console.log(req.body.email, req.body.password)
@@ -42,7 +50,6 @@ app.post('/signup', (req, res) => {
 app.post('/signin', (req, res) => {
     console.log(req.body)
     signinUser(req.body.email, req.body.password, (user) => {
-        console.log(user.uid)
         if (!user.uid) {
             res.end(JSON.stringify({ "result": 1 }))
         }
@@ -112,11 +119,15 @@ app.post('/reservations', async (req, res) => {
 
 app.get('/reservations', async (req, res) => {
     await getCollectionDocs(db, 'reservations', req.query.docId, (result) => {
-        if (!result.reservations) {
+        if (result && !(result.reservations)) {
             // An error happened.
             res.end(JSON.stringify({ "result": 1 }))
         }
-        res.end(JSON.stringify({ "reservations": result.reservations }));
+        if (result && result.reservations) {
+            res.end(JSON.stringify({ "reservations": result.reservations }));
+        } else {
+            res.end(JSON.stringify({ "reservations": [] }));
+        }
     })
 });
 

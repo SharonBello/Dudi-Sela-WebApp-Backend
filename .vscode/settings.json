@@ -4,6 +4,8 @@
         "dudi",
         "Firestore",
         "middlewares",
-        "sela"
+        "sela",
+        "signin",
+        "signout"
     ]
 }
