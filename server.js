@@ -14,6 +14,7 @@ const port = 4000
 
 import { authRoutes } from './api/auth/auth.routes.js'
 import { reservationRoutes } from './api/reservation/reservation.routes.js'
+// import { courtRoutes } from './api/courts/court.routes.js'
 
 // app.use('/api/user', userRoutes)
 app.use('/auth', authRoutes)
