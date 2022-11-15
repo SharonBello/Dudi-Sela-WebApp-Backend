@@ -20,7 +20,7 @@ app.use(express.static('public'));
 app.use(cors())
 authListener();
 // const port = 4000;
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3030;
 const initializedFirebase = initializeApp(getFirebaseConfig());
 const db = getFirestore(initializedFirebase);
 
