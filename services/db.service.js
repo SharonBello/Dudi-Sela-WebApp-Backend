@@ -1,30 +1,43 @@
 // const MongoClient = require('mongodb').MongoClient
-import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore/lite';
-import { keyConfig } from './key.service.js'
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore/lite'
+import  getFirebaseConfig from './key.service.js'
 
-import { initializeApp } from 'firebase/app';
+import { initializeApp } from 'firebase/app'
 
-const firebaseConfig = keyConfig
-const initializedFirebase = initializeApp(firebaseConfig);
-const db = getFirestore(initializedFirebase);
+const firebaseConfig = getFirebaseConfig()
+const initializedFirebase = initializeApp(firebaseConfig)
+export const db = getFirestore(initializedFirebase)
 
 
-async function getCollectionDocs(db, docName, docId) {
+export async function getCollectionDocs(db, docName, docId) {
     const docRef = doc(db, docName, docId)
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
+        console.log("Document data:", docSnap.data())
     } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
+        console.log("No such document!")
     }
-    return docSnap.data();
+    return docSnap.data()
 }
 
-async function addDocument(db, docName, docId, pyaload) {
-    // Add a new document in collection "cities"
-    await setDoc(doc(db, docName, docId), payload);
+export async function addDocument(db, docName, docId, data, fn) {
+    // Add a new document
+    const docRef = doc(db, docName, docId)
+    const docSnap = await getDoc(docRef)
+    const _reservations = docSnap.data().reservations
+    _reservations.push(data)
+    console.log(_reservations)
+
+    setDoc(docRef, { "reservations": _reservations })
+        .then((result) => {
+            fn(result)
+        })
+        .catch((error) => {
+            const errorCode = error.code
+            const errorMessage = error.message
+            fn(errorCode)
+        })
 }
 
 
-export { db, getCollectionDocs, addDocument }

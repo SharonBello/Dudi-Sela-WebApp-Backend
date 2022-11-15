@@ -1,15 +1,29 @@
 import express from 'express'
-// import { requireAuth, requireAdmin } from '../../middlewares/requireAuth.middleware.js'
-import { getReservations, getReservationById, addReservation, removeReservation, editReservation} from './reservation.controller.js'
-const router = express.Router()
+import { getReservations, addReservation, } from './reservation.controller.js'
 
-// middleware that is specific to this router
-// router.use(requireAuth)
+export const reservationRoutes = express.Router()
 
-router.get('/', getReservations)
-router.get('/:id', getReservationById)
-router.post('/', addReservation)
-router.put('/:id', editReservation)
-router.delete('/:id',  removeReservation)
+reservationRoutes.get('/reservations', getReservations)
+reservationRoutes.post('/reservations', addReservation)
 
-module.exports = router
+// app.get('/courts', async (req, res) => {
+//     await getCollectionDocs(db, 'courts', 'jawPTlXha948TQyBkuyP', (result) => {
+//         if (!result.court_numbers) {
+//             // An error happened.
+//             res.end(JSON.stringify({ "result": 1 }))
+//         }
+//         res.end(JSON.stringify({ "courts": result }));
+//     })
+// });
+
+// app.get('/sport_center_members', async (req, res) => {
+//     await getCollectionDocs(db, 'sport_center_members', 'ksaAp1oIHwpb6eH6Z5Ig', (result) => {
+//         if (!result.members) {
+//             // An error happened.
+//             res.end(JSON.stringify({ "result": 1 }))
+//         }
+//         res.end(JSON.stringify({ "sport_center_members": result }));
+//     })
+// });
+
+

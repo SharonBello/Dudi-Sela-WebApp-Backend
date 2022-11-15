@@ -1,66 +1,40 @@
-import { authService } from './auth.service'
-import { userService } from '../user/user.service'
-import Cryptr from 'Cryptr'
+import { signinUser, createUser } from '../user/user.service.js'
+import { initializeApp } from 'firebase/app'
+import getFirebaseConfig from '../../services/key.service.js'
+import { getAuth, signOut } from "firebase/auth"
 
-const cryptr = new Cryptr(process.env.SECRET1 || 'Dudi-Sela-1234')
+const auth = getAuth(initializeApp(getFirebaseConfig()))
 
-async function login(req, res) {
-    const { email, password } = req.body
+export function signin(req, res) {
+    console.log(req.body)
+    signinUser(req.body.email, req.body.password, (user) => {
+        console.log(user)
+        if (!user.uid) {
 
-    try {
-        const user = await authService.login(email, password)
-        const loginToken = authService.getLoginToken(user)
-        res.cookie('loginToken', loginToken)
-        res.json(user)
-    } catch (err) {
-        res.status(401).send({ err: 'Failed to Login' })
-    }
-}
-
-async function signupGoogle(req, res) {
-    try {
-        const credentials = req.body
-        console.log('auth controller line 26')
-        let userExisting = await userService.checkIfGoogleAccount(credentials) 
-        if(!userExisting) {
-            console.log('!userExisting')    
-            userService.add(credentials)
+            res.end(JSON.stringify({ "result": 1 }))
         }
-        const user = await authService.login(credentials.email, credentials.password)
-        const loginToken = authService.getLoginToken(user)
-        res.cookie('loginToken', loginToken)
-        res.json(user)
-    } catch (err) {
-        res.status(500).send({ err: 'Failed to signup' })
-    }
+        res.end(JSON.stringify({ "uid": user.uid }))
+    })
 }
 
-async function signup(req, res) {
-    try {
-        const credentials = req.body
-        // Never log passwords
-        const account = await authService.signup(credentials)
-        const user = await authService.login(credentials.email, credentials.password)
-        const loginToken = authService.getLoginToken(user)
-        res.cookie('loginToken', loginToken)
-        res.json(user)
-    } catch (err) {
-        res.status(500).send({ err: 'Failed to signup' })
-    }
+export function signup(req, res) {
+    createUser(req.body.email, req.body.password, (uid) => {
+        console.log(uid)
+        if (!uid) {
+            res.end(JSON.stringify({ "result": "1" }))
+        }
+        res.end(JSON.stringify({ "uid": uid }))
+    })
 }
 
-async function logout(req, res) {
-    try {
-        res.clearCookie('loginToken')
-        res.send({ msg: 'Logged out successfully' })
-    } catch (err) {
-        res.status(500).send({ err: 'Failed to logout' })
-    }
+export function signout(req, res) {
+    signOut(auth).then(() => {
+        // Sign-out successful.
+        res.end(JSON.stringify({ "result": 0 }))
+        console.log("Sign-out successful.")
+    }).catch((error) => {
+        // An error happened.
+        res.end(JSON.stringify({ "result": 1 }))
+    })
 }
 
-module.exports = {
-    login,
-    signup,
-    logout,
-    signupGoogle
-}
