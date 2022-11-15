@@ -12,9 +12,9 @@ reservationRoutes.post('/reservations', addReservation)
 //             // An error happened.
 //             res.end(JSON.stringify({ "result": 1 }))
 //         }
-//         res.end(JSON.stringify({ "courts": result }));
+//         res.end(JSON.stringify({ "courts": result }))
 //     })
-// });
+// })
 
 // app.get('/sport_center_members', async (req, res) => {
 //     await getCollectionDocs(db, 'sport_center_members', 'ksaAp1oIHwpb6eH6Z5Ig', (result) => {
@@ -22,8 +22,8 @@ reservationRoutes.post('/reservations', addReservation)
 //             // An error happened.
 //             res.end(JSON.stringify({ "result": 1 }))
 //         }
-//         res.end(JSON.stringify({ "sport_center_members": result }));
+//         res.end(JSON.stringify({ "sport_center_members": result }))
 //     })
-// });
+// })
 
 

@@ -15,20 +15,16 @@ export async function getCollectionDocs(db, docName, docId) {
     if (docSnap.exists()) {
         console.log("Document data:", docSnap.data())
     } else {
-        // doc.data() will be undefined in this case
         console.log("No such document!")
     }
     return docSnap.data()
 }
 
 export async function addDocument(db, docName, docId, data, fn) {
-    // Add a new document
     const docRef = doc(db, docName, docId)
     const docSnap = await getDoc(docRef)
-    const _reservations = docSnap.data().reservations
+    const _reservations = docSnap.data() ? docSnap.data().reservations : []
     _reservations.push(data)
-    console.log(_reservations)
-
     setDoc(docRef, { "reservations": _reservations })
         .then((result) => {
             fn(result)

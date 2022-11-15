@@ -9,11 +9,8 @@ const auth = getAuth(initializeApp(getFirebaseConfig()))
 export function signinUser(email, password, fn) {
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Signed in
-            console.log(userCredential)
             const user = userCredential.user
             fn(user)
-            // ...
         })
         .catch((error) => {
             const errorCode = error.code
@@ -27,7 +24,6 @@ export function createUser(email, password, fn) {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const uid = userCredential.user.uid
-            console.log(uid)
             fn(uid)
         })
         .catch((error) => {
