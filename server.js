@@ -1,5 +1,3 @@
-import express from 'express'
-import cors from 'cors'
 import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore/lite';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { v4 as uuidv4 } from 'uuid';
@@ -7,17 +5,32 @@ import bodyParser from 'body-parser'
 import { authListener } from './services/auth_state_listener.js';
 import getFirebaseConfig from './services/key.service.js';
 
+import express from 'express'
+import cors from 'cors'
 import { initializeApp } from 'firebase/app';
+import { http } from 'http'
+
 const auth = getAuth(initializeApp(getFirebaseConfig()));
+const app = express()
 
-const app = express();
-app.use(bodyParser.json());
+let http = http.createServer(app)
 
+app.use(bodyParser.json())
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(express.static('public'));
-app.use(cors())
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.resolve(__dirname, 'public')))
+} else {
+    const corsOptions = {
+        origin: ['http://127.0.0.1:4000', 'http://127.0.0.1:8080', 'http://localhost:8080', 'http://127.0.0.1:3000', 'http://localhost:3000'],
+        credentials: true
+    }
+    app.use(cors(corsOptions))
+}
+
+// app.use(express.static('public'));
+// app.use(cors())
 authListener();
 // const port = 4000;
 const port = process.env.PORT || 3030;
@@ -27,11 +40,12 @@ const db = getFirestore(initializedFirebase);
 // app.listen(port, () => {
 //     console.log(`Example app listening on port ${port}`)
 // });
+
 app.get('/**', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-app.listen(port, () => {
+http.listen(port, () => {
     console.log(`App listening on port ${port}!`)
 });
 
