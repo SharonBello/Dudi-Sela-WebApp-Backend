@@ -2,21 +2,23 @@
 import { v4 as uuidv4 } from 'uuid'
 import { initializeApp } from 'firebase/app'
 import getFirebaseConfig from '../../services/key.service.js'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { getAuth, setPersistence, signInWithEmailAndPassword, browserSessionPersistence, createUserWithEmailAndPassword } from "firebase/auth"
 
 const auth = getAuth(initializeApp(getFirebaseConfig()))
 
 export function signinUser(email, password, fn) {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user
-            fn(user)
-        })
-        .catch((error) => {
-            const errorCode = error.code
-            const errorMessage = error.message
-            console.log(error)
-            fn(errorCode)
+    setPersistence(auth, browserSessionPersistence)
+        .then(async () => {
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password)
+                const user = userCredential.user
+                fn(user)
+            } catch (error) {
+                const errorCode = error.code
+                const errorMessage = error.message
+                console.error(error)
+                fn(errorCode)
+            }
         })
 }
 
