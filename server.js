@@ -27,7 +27,6 @@ const corsOptions = {
 app.use(cors(corsOptions))
 // }
 
-
 import { authRoutes } from './api/auth/auth.routes.js'
 import { reservationRoutes } from './api/reservation/reservation.routes.js'
 // import { courtRoutes } from './api/courts/court.routes.js'
