@@ -10,7 +10,9 @@ export function signin(req, res) {
         if (!user.uid) {
             res.end(JSON.stringify({ "result": 1 }))
         }
-        res.end(JSON.stringify({ "uid": user.uid }))
+        else {
+            res.end(JSON.stringify({ "uid": user.uid }))
+        }
     })
 }
 
@@ -19,7 +21,9 @@ export function signup(req, res) {
         if (!uid) {
             res.end(JSON.stringify({ "result": "1" }))
         }
-        res.end(JSON.stringify({ "uid": uid }))
+        else {
+            res.end(JSON.stringify({ "uid": uid }))
+        }
     })
 }
 

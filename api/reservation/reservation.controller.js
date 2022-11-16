@@ -24,7 +24,9 @@ export async function addReservation(req, res) {
     if (result) {
       res.end(JSON.stringify({ "result": 1 }))
     }
-    res.end(JSON.stringify({ "result": 0 }))
+    else {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
   })
 }
 

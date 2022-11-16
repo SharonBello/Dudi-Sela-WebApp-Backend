@@ -10,7 +10,8 @@ app.use(cors())
 app.use(express.static('public'))
 
 authListener()
-const port = 4000
+// const port = 4000
+const port = process.env.PORT || 4000
 
 import { authRoutes } from './api/auth/auth.routes.js'
 import { reservationRoutes } from './api/reservation/reservation.routes.js'
@@ -28,4 +29,3 @@ app.get('/**', (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
-
