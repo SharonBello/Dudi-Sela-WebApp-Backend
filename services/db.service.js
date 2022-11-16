@@ -1,4 +1,3 @@
-// const MongoClient = require('mongodb').MongoClient
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore/lite'
 import  getFirebaseConfig from './key.service.js'
 
