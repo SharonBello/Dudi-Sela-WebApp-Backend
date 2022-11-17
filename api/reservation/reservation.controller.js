@@ -21,11 +21,11 @@ export async function addReservation(req, res) {
     "date": req.body.date
   }
   addDocument(db, "reservations", req.query.docId, payload, (result) => {
-    if (result) {
-      res.end(JSON.stringify({ "result": 1 }))
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
     }
     else {
-      res.end(JSON.stringify({ "result": 0 }))
+      res.end(JSON.stringify({ "result": 1 }))
     }
   })
 }
