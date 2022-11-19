@@ -24,9 +24,11 @@ app.use(cors(corsOptions))
 
 import { authRoutes } from './api/auth/auth.routes.js'
 import { reservationRoutes } from './api/reservation/reservation.routes.js'
+import { courtRoutes } from './api/court/court.routes.js'
 
 app.use('/auth', authRoutes)
 app.use('/reservations', reservationRoutes)
+app.use('/courts', courtRoutes)
 
 app.get('/**', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
