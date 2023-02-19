@@ -35,4 +35,21 @@ export async function addDocument(db, docName, docId, data, fn) {
         })
 }
 
-
+export async function deleteDocument(db, docName, docId, data, fn) {
+    const docRef = doc(db, docName, docId)
+    const docSnap = await getDoc(docRef)
+    const _reservations = docSnap.data() ? docSnap.data().reservations : []
+    const index = _reservations.findIndex(reservation => reservation.id === data.id )
+    console.log(_reservations)
+    _reservations.splice(index, 1)
+    console.log(_reservations)
+    setDoc(docRef, { "reservations": _reservations })
+        .then((result) => {
+            fn(result)
+        })
+        .catch((error) => {
+            const errorCode = error.code
+            const errorMessage = error.message
+            fn(errorCode)
+        })
+}

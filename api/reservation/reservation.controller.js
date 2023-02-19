@@ -1,4 +1,4 @@
-import { getCollectionDocs, addDocument, db } from '../../services/db.service.js'
+import { getCollectionDocs, addDocument, deleteDocument, db } from '../../services/db.service.js'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function getReservations(req, res) {
@@ -40,6 +40,18 @@ export async function addReservation(req, res) {
   })
 }
 
+export async function deleteReservation(req, res) {
+  const data = req.body;
+  deleteDocument(db, "reservations", req.query.docId, data, (result) => {
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
 export async function addReservationByDate(req, res) {
   const _uuid = uuidv4()
   const payload = {
@@ -59,3 +71,15 @@ export async function addReservationByDate(req, res) {
   })
 }
 
+
+export async function deleteReservationByDate(req, res) {
+  const data = req.body;
+  deleteDocument(db, "reservations_by_date", req.query.date, data, (result) => {
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}

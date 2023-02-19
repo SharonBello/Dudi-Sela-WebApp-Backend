@@ -1,4 +1,4 @@
-import { getCollectionDocs, addDocument, db } from '../../services/db.service.js'
+import { getCollectionDocs, db } from '../../services/db.service.js'
 
 export async function getCourts(req, res) {
   const result = await getCollectionDocs(db, 'courts', 'jawPTlXha948TQyBkuyP')
