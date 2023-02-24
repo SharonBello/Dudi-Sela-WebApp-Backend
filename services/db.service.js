@@ -30,7 +30,21 @@ export async function addDocument(db, docName, docId, data, fn) {
         })
         .catch((error) => {
             const errorCode = error.code
-            const errorMessage = error.message
+            fn(errorCode)
+        })
+}
+
+export async function changeDocument(db, docName, docId, data, fn) {
+    const docRef = doc(db, docName, docId)
+    const docSnap = await getDoc(docRef)
+    let _user_credit = docSnap.data() ? docSnap.data().user_credit : 0
+    _user_credit += data.user_credit
+    setDoc(docRef, { "user_credit": _user_credit })
+        .then((result) => {
+            fn(result)
+        })
+        .catch((error) => {
+            const errorCode = error.code
             fn(errorCode)
         })
 }
@@ -49,7 +63,6 @@ export async function deleteDocument(db, docName, docId, data, fn) {
         })
         .catch((error) => {
             const errorCode = error.code
-            const errorMessage = error.message
             fn(errorCode)
         })
 }

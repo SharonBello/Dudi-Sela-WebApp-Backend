@@ -1,10 +1,20 @@
-import { getCollectionDocs, addDocument, deleteDocument, db } from '../../services/db.service.js'
+import { getCollectionDocs, addDocument, deleteDocument, changeDocument, db } from '../../services/db.service.js'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function getReservations(req, res) {
   const result = await getCollectionDocs(db, 'reservations', req.query.docId)
   if (!result || !result.reservations) {
     res.send({reservations: []})
+  }
+  else {
+    res.send(result)
+  }
+}
+
+export async function getCredit(req, res) {
+  const result = await getCollectionDocs(db, 'user_credit', req.query.docId)
+  if (!result || !result.user_credit) {
+    res.send({user_credit: 0})
   }
   else {
     res.send(result)
@@ -31,6 +41,21 @@ export async function addReservation(req, res) {
     "date": req.body.date
   }
   addDocument(db, "reservations", req.query.docId, payload, (result) => {
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
+export async function changeCredit(req, res) {
+  const _uuid = uuidv4()
+  const payload = {
+    'user_credit': req.body.userCredit
+  }
+  changeDocument(db, "user_credit", req.query.docId, payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
