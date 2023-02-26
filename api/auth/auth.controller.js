@@ -1,6 +1,6 @@
 import { signinUser, createUser } from '../user/user.service.js'
 import { initializeApp } from 'firebase/app'
-import getFirebaseConfig from '../../services/key.service.js'
+import getFirebaseConfig from '../../.key.service.js'
 import { getAuth, signOut } from "firebase/auth"
 
 const auth = getAuth(initializeApp(getFirebaseConfig()))

@@ -1,6 +1,6 @@
 
 import { initializeApp } from 'firebase/app'
-import getFirebaseConfig from '../../services/key.service.js'
+import getFirebaseConfig from '../../.key.service.js'
 import { getAuth, setPersistence, signInWithEmailAndPassword, browserSessionPersistence, createUserWithEmailAndPassword } from "firebase/auth"
 
 const auth = getAuth(initializeApp(getFirebaseConfig()))

@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { initializeApp } from 'firebase/app'
-import getFirebaseConfig from './key.service.js' 
+import getFirebaseConfig from '../.key.service.js'
 
 export const authListener = () => {
     const auth = getAuth(initializeApp(getFirebaseConfig()))
