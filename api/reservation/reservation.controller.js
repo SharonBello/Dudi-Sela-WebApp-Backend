@@ -11,6 +11,18 @@ export async function getReservations(req, res) {
   }
 }
 
+
+export async function isReservationExists(req, res) {
+  const result = await getCollectionDocs(db, 'reservations', req.query.docId)
+  let foundReservation = false;
+  result.reservations && result.reservations.forEach(reservation => {
+    if (req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour) {
+      foundReservation = true;
+    }
+  });
+  res.send({isExists: foundReservation})
+}
+
 export async function getCredit(req, res) {
   const result = await getCollectionDocs(db, 'user_credit', req.query.docId)
   if (!result || !result.user_credit) {
@@ -38,7 +50,8 @@ export async function addReservation(req, res) {
     'startHour': req.body.startHour,
     'endHour': req.body.endHour,
     'courtNumber': req.body.courtNumber,
-    "date": req.body.date
+    "date": req.body.date,
+    'username': req.body.username
   }
   addDocument(db, "reservations", req.query.docId, payload, (result) => {
     if (!result) {
@@ -84,7 +97,8 @@ export async function addReservationByDate(req, res) {
     'startHour': req.body.startHour,
     'endHour': req.body.endHour,
     'courtNumber': req.body.courtNumber,
-    "date": req.body.date
+    "date": req.body.date,
+    'username': req.body.username
   }
   addDocument(db, "reservations_by_date", req.query.date, payload, (result) => {
     if (!result) {
