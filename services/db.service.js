@@ -15,6 +15,10 @@ export async function getCollectionDocs(db, docName, docId) {
     return docSnap.data()
 }
 
+const isArray = (obj) => {
+    return Object.prototype.toString.call(obj) === '[object Array]';
+}
+
 export async function addDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
@@ -23,8 +27,12 @@ export async function addDocument(db, docName, docId, data, fn) {
         if (!_reservations) {
             _reservations = []
         }
-        _reservations.push(data)
-            setDoc(docRef, { "reservations": _reservations })
+        if (isArray(data)) {
+            _reservations.push(...data)
+        } else {
+            _reservations.push(data)
+        }
+        setDoc(docRef, { "reservations": _reservations })
         .then((result) => {
             fn(result)
         })
