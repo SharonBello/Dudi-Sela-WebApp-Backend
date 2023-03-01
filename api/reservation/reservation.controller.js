@@ -16,7 +16,7 @@ export async function isReservationExists(req, res) {
   const result = await getCollectionDocs(db, 'reservations', req.query.docId)
   let foundReservation = false;
   result && result.reservations && result.reservations.forEach(reservation => {
-    if (req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour) {
+    if (req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour && req.body.username === reservation.username) {
       foundReservation = true;
     }
   });
