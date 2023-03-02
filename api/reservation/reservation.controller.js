@@ -86,7 +86,6 @@ export async function addReservation(req, res) {
 }
 
 export async function changeCredit(req, res) {
-  const _uuid = uuidv4()
   const payload = {
     'user_credit': req.body.userCredit
   }
