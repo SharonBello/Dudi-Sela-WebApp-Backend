@@ -1,5 +1,5 @@
 import express from 'express'
-import { getReservations, postScheduleByWeekDay, getScheduleByWeekDay, isReservationExists, getReservationsByDate, addReservation, getCredit, changeCredit, deleteReservation, deleteReservationByDate, addReservationByDate } from './reservation.controller.js'
+import { getReservations, resetScheduleByWeekDay, postScheduleByWeekDay, getScheduleByWeekDay, isReservationExists, getReservationsByDate, addReservation, getCredit, changeCredit, deleteReservation, deleteReservationByDate, addReservationByDate } from './reservation.controller.js'
 
 export const reservationRoutes = express.Router()
 
@@ -8,6 +8,7 @@ reservationRoutes.post('/reservation/exists', isReservationExists)
 reservationRoutes.get('/reservations/date', getReservationsByDate)
 reservationRoutes.get('/schedule/weekday', getScheduleByWeekDay)
 reservationRoutes.post('/schedule/weekday', postScheduleByWeekDay)
+reservationRoutes.post('/schedule/reset', resetScheduleByWeekDay)
 reservationRoutes.get('/usercredit', getCredit)
 reservationRoutes.post('/reservations', addReservation)
 reservationRoutes.post('/usercredit', changeCredit)

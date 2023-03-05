@@ -19,6 +19,22 @@ const isArray = (obj) => {
     return Object.prototype.toString.call(obj) === '[object Array]';
 }
 
+export async function resetDocument(db, docName, docId, fn) {
+    try {
+        const docRef = doc(db, docName, docId)
+        await setDoc(docRef, { "reservations": [] })
+        .then((result) => {
+            fn(result)
+        })
+        .catch((error) => {
+            const errorCode = error.code
+            fn(errorCode)
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export async function addDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)

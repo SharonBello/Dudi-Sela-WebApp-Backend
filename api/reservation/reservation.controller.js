@@ -1,4 +1,4 @@
-import { getCollectionDocs, addDocument, deleteDocument, changeDocument, db } from '../../services/db.service.js'
+import { getCollectionDocs, resetDocument, addDocument, deleteDocument, changeDocument, db } from '../../services/db.service.js'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function getReservations(req, res) {
@@ -16,7 +16,7 @@ export async function isReservationExists(req, res) {
   const result = await getCollectionDocs(db, 'reservations', req.query.docId)
   let foundReservation = false;
   result && result.reservations && result.reservations.forEach(reservation => {
-    if (req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour && req.body.username === reservation.username) {
+    if (req.body.date === reservation.date && req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour && req.body.username === reservation.username) {
       foundReservation = true;
     }
   });
@@ -53,16 +53,27 @@ export async function getScheduleByWeekDay(req, res) {
   }
 }
 
-export async function postScheduleByWeekDay(req, res) {
-  const weekdayReservations = req.body[req.query.weekday]
-  addDocument(db, "schedule_by_weekday", req.query.weekday, weekdayReservations, (result) => {
-    if (!result) {
+export async function resetScheduleByWeekDay(req, res) {
+  await resetDocument(db, "schedule_by_weekday", req.query.weekday, (result) => {
+    if (result) {
+      res.end(JSON.stringify({ "result": 1 }))
+    } else {
       res.end(JSON.stringify({ "result": 0 }))
     }
-    else {
-      res.end(JSON.stringify({ "result": 1 }))
-    }
   })
+}
+
+export async function postScheduleByWeekDay(req, res) {
+  const weekdayReservations = req.body
+  for (let index = 0; index < weekdayReservations.length; index++) {
+    const reservation = weekdayReservations[index];
+    await addDocument(db, "schedule_by_weekday", req.query.weekday, reservation, (result) => {
+      if (result) {
+        res.end(JSON.stringify({ "result": 1 }))
+      }
+    })
+  }
+  res.end(JSON.stringify({ "result": 0 }))
 }
 
 export async function addReservation(req, res) {
