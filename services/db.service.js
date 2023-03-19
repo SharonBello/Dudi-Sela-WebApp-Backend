@@ -10,7 +10,7 @@ export async function getCollectionDocs(db, docName, docId) {
     const docRef = doc(db, docName, docId)
     const docSnap = await getDoc(docRef)
     if (!docSnap.exists()) {
-        console.log("No such document!")
+        console.log(docName + " no such document fo " + docId)
     }
     return docSnap.data()
 }
