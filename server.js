@@ -25,6 +25,7 @@ app.use(cors(corsOptions))
 import { authRoutes } from './api/auth/auth.routes.js'
 import { reservationRoutes } from './api/reservation/reservation.routes.js'
 import { courtRoutes } from './api/court/court.routes.js'
+import { eventRoutes } from './api/event/event.routes.js'
 import { instructorRoutes } from './api/instructor/instructor.routes.js'
 import admin from 'firebase-admin'
 
@@ -54,6 +55,7 @@ app.use('/', checkAuth)
 app.use('/auth', authRoutes)
 app.use('/reservations', reservationRoutes)
 app.use('/courts', courtRoutes)
+app.use('/events', eventRoutes)
 app.use('/instructors', instructorRoutes)
 
 app.get('/**', (req, res) => {

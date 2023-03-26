@@ -62,6 +62,33 @@ export async function addDocument(db, docName, docId, data, fn) {
 
 }
 
+export async function addEventDocument(db, docName, docId, data, fn) {
+    try {
+        const docRef = doc(db, docName, docId)
+        const docSnap = await getDoc(docRef)
+        let _events = docSnap.data() ? docSnap.data().events : []
+        if (!_events) {
+            _events = []
+        }
+        if (isArray(data)) {
+            _events.push(...data)
+        } else {
+            _events.push(data)
+        }
+        setDoc(docRef, { "events": _events })
+        .then((result) => {
+            fn(result)
+        })
+        .catch((error) => {
+            const errorCode = error.code
+            fn(errorCode)
+        })
+    } catch (error) {
+        console.error(error)
+    }
+
+}
+
 export async function changeDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
