@@ -79,7 +79,25 @@ export async function addClubCourtDoc(db, docName, docId, data, fn) {
     } catch (error) {
         console.error(error)
     }
+}
 
+export async function addPriceConstraintDoc(db, docName, docId, data, fn) {
+    try {
+        const docRef = doc(db, docName, docId)
+        const docSnap = await getDoc(docRef)
+        let _constraints = docSnap.data() ? docSnap.data().constraints : []
+        _constraints.push(data)
+        setDoc(docRef, { "constraints": _constraints })
+        .then((result) => {
+            fn(result)
+        })
+        .catch((error) => {
+            const errorCode = error.code
+            fn(errorCode)
+        })
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function addEventDocument(db, docName, docId, data, fn) {
