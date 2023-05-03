@@ -62,6 +62,7 @@ export async function addDocument(db, docName, docId, data, fn) {
 
 }
 
+// TODO: replace addPriceConstraintDoc with addDocument
 export async function addClubCourtDoc(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
@@ -80,7 +81,7 @@ export async function addClubCourtDoc(db, docName, docId, data, fn) {
         console.error(error)
     }
 }
-
+// TODO: replace addPriceConstraintDoc with addDocument
 export async function addPriceConstraintDoc(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
@@ -100,6 +101,42 @@ export async function addPriceConstraintDoc(db, docName, docId, data, fn) {
     }
 }
 
+// export async function addDocument(db, docName, docId, data, fn) {
+//     try {
+//         const docRef = doc(db, docName, docId)
+//         const docSnap = await getDoc(docRef)
+//         let _val
+//         switch (docName) {
+//             case "reservations":
+//                 _val = docSnap.data() ? docSnap.data().reservations : []
+//                 if (!_val) {
+//                     _val = []
+//                 }
+//                 if (isArray(data)) {
+//                     _val.push(...data)
+//                 } else {
+//                     _val.push(data)
+//                 }
+//                 break;
+//             default:
+//                 break;
+//         }
+//         if (_val) {
+//             const obj = {}
+//             obj[docName] = _val
+//             setDoc(docRef, obj).then((result) => {
+//                 fn(result)
+//             }).catch((error) => {
+//                 const errorCode = error.code
+//                 fn(errorCode)
+//             })
+//         }
+//     } catch (error) {
+//         console.error(error)
+//     }
+
+// }
+// TODO: replace addEventDocument with addDocument
 export async function addEventDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
@@ -124,25 +161,31 @@ export async function addEventDocument(db, docName, docId, data, fn) {
     } catch (error) {
         console.error(error)
     }
-
 }
 
 export async function changeDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
-        let _user_credit = docSnap.data() ? docSnap.data().user_credit : 0
-        _user_credit += data.user_credit
-            setDoc(docRef, { "user_credit": _user_credit })
-        .then((result) => {
+        let _val
+        switch (docName) {
+            case "user_credit":
+                _val = docSnap.data() ? docSnap.data().user_credit : 0
+                _val += data.user_credit
+                break;
+            default:
+                break;
+        }
+        const obj = {}
+        obj[docName] = _val
+        setDoc(docRef, obj).then((result) => {
             fn(result)
-        })
-        .catch((error) => {
+        }).catch((error) => {
             const errorCode = error.code
             fn(errorCode)
         })
     } catch (error) {
-        console.error(error)
+        fn(error)
     }
 
 }
@@ -151,14 +194,21 @@ export async function deleteDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
-        const _reservations = docSnap.data() ? docSnap.data().reservations : []
-        const index = _reservations.findIndex(reservation => reservation.id === data.id )
-        _reservations.splice(index, 1)
-            setDoc(docRef, { "reservations": _reservations })
-        .then((result) => {
+        let _val
+        switch (docName) {
+            case "reservations":
+                _val = docSnap.data() ? docSnap.data().reservations : []
+                const index = _reservations.findIndex(reservation => reservation.id === data.id )
+                _val.splice(index, 1)
+                break;
+            default:
+                break;
+        }
+        const obj = {}
+        obj[docName] = _val
+        setDoc(docRef, obj).then((result) => {
             fn(result)
-        })
-        .catch((error) => {
+        }).catch((error) => {
             const errorCode = error.code
             fn(errorCode)
         })
