@@ -1,4 +1,4 @@
-import { getCollectionDocs, db } from '../../services/db.service.js'
+import { addClubCourtDoc, getCollectionDocs, db } from '../../services/db.service.js'
 
 export async function getCourts(req, res) {
   const result = await getCollectionDocs(db, 'courts', 'jawPTlXha948TQyBkuyP')
@@ -17,3 +17,24 @@ export async function getSportCenterMembers(req, res) {
       res.send(result)
     }
   }
+
+export async function getClubCourts(req, res) {
+  const result = await getCollectionDocs(db, 'club_courts', '4rOV0DtYz6cl6doEhKTp')
+  if (!result) {
+    res.send({club_courts: []})
+  } else {
+    res.send(result)
+  }
+}
+
+
+export async function addClubCourt(req, res) {
+  addClubCourtDoc(db, "club_courts", '4rOV0DtYz6cl6doEhKTp', req.body.courtName, (result) => {
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
