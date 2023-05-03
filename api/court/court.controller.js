@@ -29,7 +29,7 @@ export async function getClubCourts(req, res) {
 
 
 export async function addClubCourt(req, res) {
-  addClubCourtDoc(db, "club_courts", '4rOV0DtYz6cl6doEhKTp', req.body.courtName, (result) => {
+  addClubCourtDoc(db, "club_courts", '4rOV0DtYz6cl6doEhKTp', {"name": req.body.name, "type": req.body.type}, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
