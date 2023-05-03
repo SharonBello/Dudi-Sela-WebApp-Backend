@@ -35,45 +35,6 @@ export async function resetDocument(db, docName, docId, fn) {
     }
 }
 
-// TODO: replace addPriceConstraintDoc with addDocument
-export async function addClubCourtDoc(db, docName, docId, data, fn) {
-    try {
-        const docRef = doc(db, docName, docId)
-        const docSnap = await getDoc(docRef)
-        let _courts = docSnap.data() ? docSnap.data().courts : []
-        _courts.push(data)
-        setDoc(docRef, { "courts": _courts })
-        .then((result) => {
-            fn(result)
-        })
-        .catch((error) => {
-            const errorCode = error.code
-            fn(errorCode)
-        })
-    } catch (error) {
-        console.error(error)
-    }
-}
-// TODO: replace addPriceConstraintDoc with addDocument
-export async function addPriceConstraintDoc(db, docName, docId, data, fn) {
-    try {
-        const docRef = doc(db, docName, docId)
-        const docSnap = await getDoc(docRef)
-        let _constraints = docSnap.data() ? docSnap.data().constraints : []
-        _constraints.push(data)
-        setDoc(docRef, { "constraints": _constraints })
-        .then((result) => {
-            fn(result)
-        })
-        .catch((error) => {
-            const errorCode = error.code
-            fn(errorCode)
-        })
-    } catch (error) {
-        console.error(error)
-    }
-}
-
 export async function addDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
@@ -96,6 +57,40 @@ export async function addDocument(db, docName, docId, data, fn) {
                 }
                 obj["reservations"] = _val
                 break;
+            case "events":
+                _val = docSnap.data() ? docSnap.data().events : []
+                if (!_val) {
+                    _val = []
+                }
+                if (isArray(data)) {
+                    _val.push(...data)
+                } else {
+                    _val.push(data)
+                }
+                obj["events"] = _val
+                break;
+            case "price_constraints":
+                _val = docSnap.data() ? docSnap.data().constraints : []
+                if (!_val) {
+                    _val = []
+                }
+                if (isArray(data)) {
+                    _val.push(...data)
+                } else {
+                    _val.push(data)
+                }
+                obj["constraints"] = _val
+            case "club_courts":
+                _val = docSnap.data() ? docSnap.data().courts : []
+                if (!_val) {
+                    _val = []
+                }
+                if (isArray(data)) {
+                    _val.push(...data)
+                } else {
+                    _val.push(data)
+                }
+                obj["courts"] = _val
             default:
                 break;
         }
@@ -107,33 +102,6 @@ export async function addDocument(db, docName, docId, data, fn) {
                 fn(errorCode)
             })
         }
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-// TODO: replace addEventDocument with addDocument
-export async function addEventDocument(db, docName, docId, data, fn) {
-    try {
-        const docRef = doc(db, docName, docId)
-        const docSnap = await getDoc(docRef)
-        let _events = docSnap.data() ? docSnap.data().events : []
-        if (!_events) {
-            _events = []
-        }
-        if (isArray(data)) {
-            _events.push(...data)
-        } else {
-            _events.push(data)
-        }
-        setDoc(docRef, { "events": _events })
-        .then((result) => {
-            fn(result)
-        })
-        .catch((error) => {
-            const errorCode = error.code
-            fn(errorCode)
-        })
     } catch (error) {
         console.error(error)
     }

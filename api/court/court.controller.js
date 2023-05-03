@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { addClubCourtDoc, getCollectionDocs, db, addPriceConstraintDoc } from '../../services/db.service.js'
+import { getCollectionDocs, db, addDocument } from '../../services/db.service.js'
 
 export async function getCourts(req, res) {
   const result = await getCollectionDocs(db, 'courts', 'jawPTlXha948TQyBkuyP')
@@ -39,7 +39,7 @@ export async function getPriceConstraints(req, res) {
 }
 
 export async function addClubCourt(req, res) {
-  addClubCourtDoc(db, "club_courts", '4rOV0DtYz6cl6doEhKTp', {"name": req.body.name, "type": req.body.type}, (result) => {
+  addDocument(db, "club_courts", '4rOV0DtYz6cl6doEhKTp', {"name": req.body.name, "type": req.body.type}, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
@@ -54,7 +54,7 @@ export async function addPriceConstraint(req, res) {
   const payload = req.body
   payload['id'] = _uuid
 
-  addPriceConstraintDoc(db, "price_constraints", 'UFZMZOmWYDgreHxh0Epn', payload, (result) => {
+  addDocument(db, "price_constraints", 'UFZMZOmWYDgreHxh0Epn', payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
