@@ -80,6 +80,7 @@ export async function addDocument(db, docName, docId, data, fn) {
                     _val.push(data)
                 }
                 obj["constraints"] = _val
+                break;
             case "club_courts":
                 _val = docSnap.data() ? docSnap.data().courts : []
                 if (!_val) {
@@ -91,6 +92,7 @@ export async function addDocument(db, docName, docId, data, fn) {
                     _val.push(data)
                 }
                 obj["courts"] = _val
+                break;
             default:
                 break;
         }
