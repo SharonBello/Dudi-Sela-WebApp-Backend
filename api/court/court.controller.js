@@ -39,7 +39,10 @@ export async function getPriceConstraints(req, res) {
 }
 
 export async function addClubCourt(req, res) {
-  addDocument(db, "club_courts", '4rOV0DtYz6cl6doEhKTp', {"name": req.body.name, "type": req.body.type}, (result) => {
+  const _uuid = uuidv4()
+  const payload = {"name": req.body.name, "type": req.body.type}
+  payload['id'] = _uuid
+  addDocument(db, "club_courts", '4rOV0DtYz6cl6doEhKTp', payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }

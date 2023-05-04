@@ -34,7 +34,7 @@ export async function resetDocument(db, docName, docId, fn) {
         console.error(error)
     }
 }
-
+// TODO: not only addCocument, but also getDocument, getDocuments, deleteDocument, and editDocument should be genertic
 export async function addDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
