@@ -6,7 +6,7 @@ const initializedFirebase = initializeApp(firebaseConfig)
 export const db = getFirestore(initializedFirebase)
 
 
-export async function getCollectionDocs(db, docName, docId) {
+export async function getDocuments(db, docName, docId) {
     const docRef = doc(db, docName, docId)
     const docSnap = await getDoc(docRef)
     if (!docSnap.exists()) {
@@ -19,7 +19,7 @@ const isArray = (obj) => {
     return Object.prototype.toString.call(obj) === '[object Array]';
 }
 
-export async function resetDocument(db, docName, docId, fn) {
+export async function resetCollection(db, docName, docId, fn) {
     try {
         const docRef = doc(db, docName, docId)
         await setDoc(docRef, { "reservations": [] })
@@ -34,14 +34,13 @@ export async function resetDocument(db, docName, docId, fn) {
         console.error(error)
     }
 }
-// TODO: not only addCocument, but also getDocument, getDocuments, deleteDocument, and editDocument should be genertic
+// TODO: not only addCocument, but also getDocument, getDocuments, deleteDocument, and editDocument should be generic
 export async function addDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
 
-        let _val
-        let obj = {}
+        let _val, docs = {}
         switch (docName) {
             case "reservations":
             case "reservations_by_date":
@@ -55,7 +54,7 @@ export async function addDocument(db, docName, docId, data, fn) {
                 } else {
                     _val.push(data)
                 }
-                obj["reservations"] = _val
+                docs["reservations"] = _val
                 break;
             case "events":
                 _val = docSnap.data() ? docSnap.data().events : []
@@ -67,10 +66,10 @@ export async function addDocument(db, docName, docId, data, fn) {
                 } else {
                     _val.push(data)
                 }
-                obj["events"] = _val
+                docs["events"] = _val
                 break;
             case "price_constraints":
-                _val = docSnap.data() ? docSnap.data().constraints : []
+                _val = docSnap.data() ? docSnap.data().price_constraints : []
                 if (!_val) {
                     _val = []
                 }
@@ -79,10 +78,10 @@ export async function addDocument(db, docName, docId, data, fn) {
                 } else {
                     _val.push(data)
                 }
-                obj["constraints"] = _val
+                docs["price_constraints"] = _val
                 break;
             case "club_courts":
-                _val = docSnap.data() ? docSnap.data().courts : []
+                _val = docSnap.data() ? docSnap.data().club_courts : []
                 if (!_val) {
                     _val = []
                 }
@@ -91,13 +90,13 @@ export async function addDocument(db, docName, docId, data, fn) {
                 } else {
                     _val.push(data)
                 }
-                obj["courts"] = _val
+                docs["club_courts"] = _val
                 break;
             default:
                 break;
         }
-        if (Object.keys(obj).length >0) {
-            setDoc(docRef, obj).then((result) => {
+        if (Object.keys(docs).length >0) {
+            setDoc(docRef, docs).then((result) => {
                 fn(result)
             }).catch((error) => {
                 const errorCode = error.code
@@ -109,22 +108,27 @@ export async function addDocument(db, docName, docId, data, fn) {
     }
 }
 
-export async function changeDocument(db, docName, docId, data, fn) {
+export async function editDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
-        let _val
+        let _val, docs={}
         switch (docName) {
             case "user_credit":
                 _val = docSnap.data() ? docSnap.data().user_credit : 0
                 _val += data.user_credit
+                docs["user_credit"] = _val
+                break;
+            case "price_constraints":
+                _val = docSnap.data() ? docSnap.data().price_constraints : 0
+                const index = _val.findIndex(constraint => constraint.id === data.id )
+                _val[index] = data
+                docs["price_constraints"] = _val
                 break;
             default:
                 break;
         }
-        const obj = {}
-        obj[docName] = _val
-        setDoc(docRef, obj).then((result) => {
+        setDoc(docRef, docs).then((result) => {
             fn(result)
         }).catch((error) => {
             const errorCode = error.code
@@ -140,19 +144,25 @@ export async function deleteDocument(db, docName, docId, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
-        let _val
+        let _val, docs={}
+        let index
         switch (docName) {
             case "reservations":
                 _val = docSnap.data() ? docSnap.data().reservations : []
-                const index = _reservations.findIndex(reservation => reservation.id === data.id )
+                index = _val.findIndex(reservation => reservation.id === data.id )
                 _val.splice(index, 1)
+                docs["reservations"] = _val
+                break;
+            case "price_constraints":
+                _val = docSnap.data() ? docSnap.data().price_constraints : []
+                index = _val.findIndex(constraint => constraint.id === data.id )
+                _val.splice(index, 1)
+                    docs["price_constraints"] = _val
                 break;
             default:
                 break;
         }
-        const obj = {}
-        obj[docName] = _val
-        setDoc(docRef, obj).then((result) => {
+        setDoc(docRef, docs).then((result) => {
             fn(result)
         }).catch((error) => {
             const errorCode = error.code

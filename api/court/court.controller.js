@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
-import { getCollectionDocs, db, addDocument } from '../../services/db.service.js'
+import { getDocuments, db, addDocument, deleteDocument, editDocument } from '../../services/db.service.js'
 
 export async function getCourts(req, res) {
-  const result = await getCollectionDocs(db, 'courts', 'jawPTlXha948TQyBkuyP')
+  const result = await getDocuments(db, 'courts', 'jawPTlXha948TQyBkuyP')
   if (!result) {
     res.send({courts: []})
   } else {
@@ -11,7 +11,7 @@ export async function getCourts(req, res) {
 }
 
 export async function getSportCenterMembers(req, res) {
-    const result = await getCollectionDocs(db, 'sport_center_members', 'ksaAp1oIHwpb6eH6Z5Ig')
+    const result = await getDocuments(db, 'sport_center_members', 'ksaAp1oIHwpb6eH6Z5Ig')
     if (!result || !result.courts) {
       res.send({sport_center_members: []})
     } else {
@@ -20,7 +20,7 @@ export async function getSportCenterMembers(req, res) {
   }
 
 export async function getClubCourts(req, res) {
-  const result = await getCollectionDocs(db, 'club_courts', '4rOV0DtYz6cl6doEhKTp')
+  const result = await getDocuments(db, 'club_courts', '4rOV0DtYz6cl6doEhKTp')
   if (!result) {
     res.send({club_courts: []})
   } else {
@@ -30,7 +30,7 @@ export async function getClubCourts(req, res) {
 
 
 export async function getPriceConstraints(req, res) {
-  const result = await getCollectionDocs(db, 'price_constraints', 'UFZMZOmWYDgreHxh0Epn')
+  const result = await getDocuments(db, 'price_constraints', 'UFZMZOmWYDgreHxh0Epn')
   if (!result) {
     res.send({price_constraints: []})
   } else {
@@ -67,9 +67,19 @@ export async function addPriceConstraint(req, res) {
   })
 }
 
-export async function deleteConstraint(req, res) {
-  const data = req.body;
-  deleteDocument(db, "price_constraints", req.query.docId, data, (result) => {
+export async function editPriceConstraint(req, res) {
+  editDocument(db, "price_constraints", 'UFZMZOmWYDgreHxh0Epn', req.body, (result) => {
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
+export async function deletePriceConstraint(req, res) {
+  deleteDocument(db, "price_constraints", 'UFZMZOmWYDgreHxh0Epn', req.body, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }

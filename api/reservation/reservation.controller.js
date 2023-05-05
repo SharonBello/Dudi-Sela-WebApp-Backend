@@ -1,8 +1,8 @@
-import { getCollectionDocs, resetDocument, addDocument, deleteDocument, changeDocument, db } from '../../services/db.service.js'
+import { getDocuments, resetCollection, addDocument, deleteDocument, editDocument, db } from '../../services/db.service.js'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function getReservations(req, res) {
-  const result = await getCollectionDocs(db, 'reservations', req.query.docId)
+  const result = await getDocuments(db, 'reservations', req.query.docId)
   if (!result || !result.reservations) {
     res.send({reservations: []})
   }
@@ -13,7 +13,7 @@ export async function getReservations(req, res) {
 
 
 export async function isReservationExists(req, res) {
-  const result = await getCollectionDocs(db, 'reservations', req.query.docId)
+  const result = await getDocuments(db, 'reservations', req.query.docId)
   let foundReservation = false;
   result && result.reservations && result.reservations.forEach(reservation => {
     if (req.body.date === reservation.date && req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour && req.body.username === reservation.username) {
@@ -24,7 +24,7 @@ export async function isReservationExists(req, res) {
 }
 
 export async function getCredit(req, res) {
-  const result = await getCollectionDocs(db, 'user_credit', req.query.docId)
+  const result = await getDocuments(db, 'user_credit', req.query.docId)
   if (!result || !result.user_credit) {
     res.send({user_credit: 0})
   }
@@ -34,7 +34,7 @@ export async function getCredit(req, res) {
 }
 
 export async function getReservationsByDate(req, res) {
-  const result = await getCollectionDocs(db, 'reservations_by_date', req.query.date)
+  const result = await getDocuments(db, 'reservations_by_date', req.query.date)
   if (!result || !result.reservations) {
     res.send({reservations: []})
   }
@@ -44,7 +44,7 @@ export async function getReservationsByDate(req, res) {
 }
 
 export async function getScheduleByWeekDay(req, res) {
-  const result = await getCollectionDocs(db, 'schedule_by_weekday', req.query.weekday)
+  const result = await getDocuments(db, 'schedule_by_weekday', req.query.weekday)
   if (!result || !result.reservations) {
     res.send({reservations: []})
   }
@@ -54,7 +54,7 @@ export async function getScheduleByWeekDay(req, res) {
 }
 
 export async function resetScheduleByWeekDay(req, res) {
-  await resetDocument(db, "schedule_by_weekday", req.query.weekday, (result) => {
+  await resetCollection(db, "schedule_by_weekday", req.query.weekday, (result) => {
     if (result) {
       res.end(JSON.stringify({ "result": 1 }))
     } else {
@@ -100,7 +100,7 @@ export async function changeCredit(req, res) {
   const payload = {
     'user_credit': req.body.userCredit
   }
-  changeDocument(db, "user_credit", req.query.docId, payload, (result) => {
+  editDocument(db, "user_credit", req.query.docId, payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
