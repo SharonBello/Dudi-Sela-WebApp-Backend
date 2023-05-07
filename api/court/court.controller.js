@@ -51,6 +51,19 @@ export async function addClubCourt(req, res) {
     }
   })
 }
+export async function addPunchCard(req, res) {
+  const _uuid = uuidv4()
+  const payload = req.body
+  payload['id'] = _uuid
+  addDocument(db, "tau_dudisela", 'punch_cards', 'punch_cards', req.body, (result) => {
+      if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
 
 export async function addPriceConstraint(req, res) {
   const _uuid = uuidv4()
@@ -87,4 +100,14 @@ export async function deletePriceConstraint(req, res) {
       res.end(JSON.stringify({ "result": 1 }))
     }
   })
+}
+
+
+export async function getPunchCards(req, res) {
+  const result = await getDocuments(db, 'tau_dudisela', 'punch_cards', 'punch_cards')
+  if (!result) {
+    res.send({punch_cards: []})
+  } else {
+    res.send(result)
+  }
 }

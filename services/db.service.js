@@ -93,6 +93,18 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
                 }
                 docs["club_courts"] = _val
                 break;
+            case "punch_cards":
+                _val = docSnap.data() ? docSnap.data().punch_cards : []
+                if (!_val) {
+                    _val = []
+                }
+                if (isArray(data)) {
+                    _val.push(...data)
+                } else {
+                    _val.push(data)
+                }
+                docs["punch_cards"] = _val
+                break;
             default:
                 break;
         }
