@@ -1,8 +1,8 @@
 import { getDocuments, resetCollection, addDocument, deleteDocument, editDocument, db } from '../../services/db.service.js'
 import { v4 as uuidv4 } from 'uuid'
-
+// TODO: implement reservations scheulde by date and weekday from within tau_dudisella
 export async function getReservations(req, res) {
-  const result = await getDocuments(db, 'reservations', req.query.docId)
+  const result = await getDocuments(db, "tau_dudisela", "reservations" ,'reservations', req.query.docId)
   if (!result || !result.reservations) {
     res.send({reservations: []})
   }
@@ -13,7 +13,7 @@ export async function getReservations(req, res) {
 
 
 export async function isReservationExists(req, res) {
-  const result = await getDocuments(db, 'reservations', req.query.docId)
+  const result = await getDocuments(db, "tau_dudisela", "reservations", 'reservations', req.query.docId)
   let foundReservation = false;
   result && result.reservations && result.reservations.forEach(reservation => {
     if (req.body.date === reservation.date && req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour && req.body.username === reservation.username) {
@@ -24,7 +24,7 @@ export async function isReservationExists(req, res) {
 }
 
 export async function getCredit(req, res) {
-  const result = await getDocuments(db, 'user_credit', req.query.docId)
+  const result = await getDocuments(db, "tau_dudisela", 'user_credit', req.query.docId)
   if (!result || !result.user_credit) {
     res.send({user_credit: 0})
   }
@@ -34,7 +34,7 @@ export async function getCredit(req, res) {
 }
 
 export async function getReservationsByDate(req, res) {
-  const result = await getDocuments(db, 'reservations_by_date', req.query.date)
+  const result = await getDocuments(db, "tau_dudisela", 'reservations_by_date', req.query.date)
   if (!result || !result.reservations) {
     res.send({reservations: []})
   }
@@ -44,7 +44,7 @@ export async function getReservationsByDate(req, res) {
 }
 
 export async function getScheduleByWeekDay(req, res) {
-  const result = await getDocuments(db, 'schedule_by_weekday', req.query.weekday)
+  const result = await getDocuments(db, "tau_dudisela", 'schedule_by_weekday', req.query.weekday)
   if (!result || !result.reservations) {
     res.send({reservations: []})
   }
@@ -54,7 +54,7 @@ export async function getScheduleByWeekDay(req, res) {
 }
 
 export async function resetScheduleByWeekDay(req, res) {
-  await resetCollection(db, "schedule_by_weekday", req.query.weekday, (result) => {
+  await resetCollection(db, "tau_dudisela", "schedule_by_weekday", req.query.weekday, (result) => {
     if (result) {
       res.end(JSON.stringify({ "result": 1 }))
     } else {
@@ -67,7 +67,8 @@ export async function postScheduleByWeekDay(req, res) {
   const weekdayReservations = req.body
   for (let index = 0; index < weekdayReservations.length; index++) {
     const reservation = weekdayReservations[index];
-    await addDocument(db, "schedule_by_weekday", req.query.weekday, reservation, (result) => {
+    //
+    await addDocument(db, "tau_dudisela", "schedule_by_weekday", "schedule_by_weekday", req.query.weekday, reservation, (result) => {
       if (result) {
         res.end(JSON.stringify({ "result": 1 }))
       }
@@ -86,7 +87,7 @@ export async function addReservation(req, res) {
     "date": req.body.date,
     'username': req.body.username
   }
-  addDocument(db, "reservations", req.query.docId, payload, (result) => {
+  addDocument(db, "tau_dudisela", "reservations" ,"reservations", req.query.docId, payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
@@ -100,7 +101,7 @@ export async function changeCredit(req, res) {
   const payload = {
     'user_credit': req.body.userCredit
   }
-  editDocument(db, "user_credit", req.query.docId, payload, (result) => {
+  editDocument(db, "tau_dudisela", "user_credit", "user_credit", req.query.docId, payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
@@ -112,7 +113,7 @@ export async function changeCredit(req, res) {
 
 export async function deleteReservation(req, res) {
   const data = req.body;
-  deleteDocument(db, "reservations", req.query.docId, data, (result) => {
+  deleteDocument(db, "tau_dudisela", "reservations", "reservations", req.query.docId, data, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
@@ -132,7 +133,7 @@ export async function addReservationByDate(req, res) {
     "date": req.body.date,
     'username': req.body.username
   }
-  addDocument(db, "reservations_by_date", req.query.date, payload, (result) => {
+  addDocument(db, "tau_dudisela", "reservations_by_date", "reservations_by_date", req.query.date, payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
@@ -145,7 +146,7 @@ export async function addReservationByDate(req, res) {
 
 export async function deleteReservationByDate(req, res) {
   const data = req.body;
-  deleteDocument(db, "reservations_by_date", req.query.date, data, (result) => {
+  deleteDocument(db, "tau_dudisela", "reservations_by_date", "reservations_by_date", req.query.date, data, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }

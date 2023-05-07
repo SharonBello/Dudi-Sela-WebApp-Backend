@@ -35,16 +35,14 @@ export async function resetCollection(db, docName, docId, fn) {
     }
 }
 // TODO: not only addCocument, but also getDocument, getDocuments, deleteDocument, and editDocument should be generic
-export async function addDocument(db, docName, docId, data, fn) {
+export async function addDocument(db, docName, docId, colName, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
 
         let _val, docs = {}
-        switch (docName) {
+        switch (colName) {
             case "reservations":
-            case "reservations_by_date":
-            case "schedule_by_weekday":
                 _val = docSnap.data() ? docSnap.data().reservations : []
                 if (!_val) {
                     _val = []
@@ -56,18 +54,21 @@ export async function addDocument(db, docName, docId, data, fn) {
                 }
                 docs["reservations"] = _val
                 break;
-            case "events":
-                _val = docSnap.data() ? docSnap.data().events : []
-                if (!_val) {
-                    _val = []
-                }
-                if (isArray(data)) {
-                    _val.push(...data)
-                } else {
-                    _val.push(data)
-                }
-                docs["events"] = _val
+            case "reservations_by_date": //TODO - there is a param that is missing
+            case "schedule_by_weekday": //TODO
                 break;
+            case "events":
+            _val = docSnap.data() ? docSnap.data().events : []
+            if (!_val) {
+                _val = []
+            }
+            if (isArray(data)) {
+                _val.push(...data)
+            } else {
+                _val.push(data)
+            }
+            docs["events"] = _val
+            break;
             case "price_constraints":
                 _val = docSnap.data() ? docSnap.data().price_constraints : []
                 if (!_val) {
@@ -108,12 +109,12 @@ export async function addDocument(db, docName, docId, data, fn) {
     }
 }
 
-export async function editDocument(db, docName, docId, data, fn) {
+export async function editDocument(db, docName, docId, colName, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
         let _val, docs={}
-        switch (docName) {
+        switch (colName) {
             case "user_credit":
                 _val = docSnap.data() ? docSnap.data().user_credit : 0
                 _val += data.user_credit
@@ -140,13 +141,13 @@ export async function editDocument(db, docName, docId, data, fn) {
 
 }
 
-export async function deleteDocument(db, docName, docId, data, fn) {
+export async function deleteDocument(db, docName, docId, colName, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
         let _val, docs={}
         let index
-        switch (docName) {
+        switch (colName) {
             case "reservations":
                 _val = docSnap.data() ? docSnap.data().reservations : []
                 index = _val.findIndex(reservation => reservation.id === data.id )
