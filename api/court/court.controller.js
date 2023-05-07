@@ -84,6 +84,20 @@ export async function addPunchCard(req, res) {
   })
 }
 
+
+export async function addClubClass(req, res) {
+  const _uuid = uuidv4()
+  const payload = req.body
+  payload['id'] = _uuid
+  addDocument(db, "tau_dudisela", 'club_classes', 'club_classes', req.body, (result) => {
+      if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
 export async function addClubHours(req, res) {
   const _uuid = uuidv4()
   const payload = req.body
@@ -168,9 +182,17 @@ export async function deleteClubHours(req, res) {
   })
 }
 
-
 export async function getPunchCards(req, res) {
   const result = await getDocuments(db, 'tau_dudisela', 'punch_cards', 'punch_cards')
+  if (!result) {
+    res.send({punch_cards: []})
+  } else {
+    res.send(result)
+  }
+}
+
+export async function getClubClasses(req, res) {
+  const result = await getDocuments(db, 'tau_dudisela', 'club_classes', 'club_classes')
   if (!result) {
     res.send({punch_cards: []})
   } else {
