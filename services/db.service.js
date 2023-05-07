@@ -105,6 +105,18 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
                 }
                 docs["punch_cards"] = _val
                 break;
+            case "club_hours":
+                _val = docSnap.data() ? docSnap.data().club_hours : []
+                if (!_val) {
+                    _val = []
+                }
+                if (isArray(data)) {
+                    _val.push(...data)
+                } else {
+                    _val.push(data)
+                }
+                docs["club_hours"] = _val
+                break;
             default:
                 break;
         }
@@ -171,6 +183,12 @@ export async function deleteDocument(db, docName, docId, colName, data, fn) {
                 index = _val.findIndex(constraint => constraint.id === data.id )
                 _val.splice(index, 1)
                     docs["price_constraints"] = _val
+                break;
+            case "club_hours":
+                _val = docSnap.data() ? docSnap.data().club_hours : []
+                index = _val.findIndex(club_hour => club_hour.id === data.id )
+                _val.splice(index, 1)
+                    docs["club_hours"] = _val
                 break;
             default:
                 break;
