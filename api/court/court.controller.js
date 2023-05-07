@@ -200,6 +200,24 @@ export async function getClubClasses(req, res) {
   }
 }
 
+export async function getClubUsers(req, res) {
+  const result = await getDocuments(db, 'tau_dudisela', 'club_users', 'club_users')
+  if (!result) {
+    res.send({club_users: []})
+  } else {
+    res.send(result)
+  }
+}
+
+export async function getUserPermissions(req, res) {
+  const result = await getDocuments(db, 'tau_dudisela', 'user_permissions', 'user_permissions')
+  if (!result) {
+    res.send({user_permissions: []})
+  } else {
+    res.send(result)
+  }
+}
+
 export async function getClubHours(req, res) {
   const result = await getDocuments(db, 'tau_dudisela', 'club_hours', 'club_hours')
   if (!result) {
