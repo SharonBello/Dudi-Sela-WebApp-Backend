@@ -150,6 +150,16 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
                 _val[index] = data
                 docs["price_constraints"] = _val
                 break;
+            case "club_preferences":
+                _val = docSnap.data() ? docSnap.data().club_preferences : 0
+                _val = data
+                docs["club_preferences"] = _val
+                break;
+            case "about_club":
+                _val = docSnap.data() ? docSnap.data().about_club : 0
+                _val = data
+                docs["about_club"] = _val
+                break;
             default:
                 break;
         }

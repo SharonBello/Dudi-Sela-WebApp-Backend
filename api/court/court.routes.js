@@ -1,10 +1,12 @@
 import express from 'express'
-import { getCourts, deleteClubHours, getPunchCards, addPunchCard, getClubHours, addClubHours, getClubCourts, getPriceConstraints, addClubCourt, getSportCenterMembers, addPriceConstraint, editPriceConstraint, deletePriceConstraint } from './court.controller.js'
+import { getCourts, deleteClubHours, getAboutClub, getClubPreferences, editClubPreferences, editAboutClub, getPunchCards, addPunchCard, getClubHours, addClubHours, getClubCourts, getPriceConstraints, addClubCourt, getSportCenterMembers, addPriceConstraint, editPriceConstraint, deletePriceConstraint } from './court.controller.js'
 
 export const courtRoutes = express.Router()
 
 courtRoutes.get('/courts', getCourts)
 courtRoutes.get('/clubcourts', getClubCourts)
+courtRoutes.get('/aboutclub', getAboutClub)
+courtRoutes.get('/clubpreferences', getClubPreferences)
 courtRoutes.get('/priceconstraints', getPriceConstraints)
 courtRoutes.post('/sportCenterMembers', getSportCenterMembers)
 courtRoutes.post('/clubcourts/addClubCourt', addClubCourt)
@@ -16,4 +18,6 @@ courtRoutes.post('/punchcards/addPunchCard', addPunchCard)
 courtRoutes.get('/clubhours', getClubHours)
 courtRoutes.post('/clubhours/addClubHours', addClubHours)
 courtRoutes.delete('/clubhours', deleteClubHours)
+courtRoutes.post('/clubpreferences', editClubPreferences)
+courtRoutes.post('/aboutclub', editAboutClub)
 

@@ -28,6 +28,25 @@ export async function getClubCourts(req, res) {
   }
 }
 
+export async function getAboutClub(req, res) {
+  const result = await getDocuments(db, 'tau_dudisela', 'about_club', "about_club")
+  if (!result) {
+    res.send({about_club: {}})
+  } else {
+    res.send(result)
+  }
+}
+
+
+export async function getClubPreferences(req, res) {
+  const result = await getDocuments(db, 'tau_dudisela', 'club_preferences', "club_preferences")
+  if (!result) {
+    res.send({club_preferences: {}})
+  } else {
+    res.send(result)
+  }
+}
+
 export async function getPriceConstraints(req, res) {
   const result = await getDocuments(db, 'tau_dudisela', 'price_constraints', 'price_constraints')
   if (!result) {
@@ -96,6 +115,28 @@ export async function addPriceConstraint(req, res) {
 
 export async function editPriceConstraint(req, res) {
   editDocument(db, "tau_dudisela", "price_constraints", "price_constraints", req.body, (result) => {
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
+export async function editClubPreferences(req, res) {
+  editDocument(db, "tau_dudisela", "club_preferences", "club_preferences", req.body, (result) => {
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
+export async function editAboutClub(req, res) {
+  editDocument(db, "tau_dudisela", "about_club", "about_club", req.body, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
