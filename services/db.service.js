@@ -116,19 +116,31 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
                     _val.push(data)
                 }
                 docs["club_hours"] = _val
-            case "club_classes":
-                _val = docSnap.data() ? docSnap.data().club_classes : []
-                if (!_val) {
-                    _val = []
-                }
-                if (isArray(data)) {
-                    _val.push(...data)
-                } else {
-                    _val.push(data)
-                }
-                docs["club_classes"] = _val
-                break;
-            default:
+                case "club_classes":
+                    _val = docSnap.data() ? docSnap.data().club_classes : []
+                    if (!_val) {
+                        _val = []
+                    }
+                    if (isArray(data)) {
+                        _val.push(...data)
+                    } else {
+                        _val.push(data)
+                    }
+                    docs["club_classes"] = _val
+                    break;
+                case "club_events":
+                    _val = docSnap.data() ? docSnap.data().club_events : []
+                    if (!_val) {
+                        _val = []
+                    }
+                    if (isArray(data)) {
+                        _val.push(...data)
+                    } else {
+                        _val.push(data)
+                    }
+                    docs["club_events"] = _val
+                    break;
+                    default:
                 break;
         }
         if (Object.keys(docs).length >0) {
