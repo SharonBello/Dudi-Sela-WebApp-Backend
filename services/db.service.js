@@ -42,20 +42,18 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
 
         let _val, docs = {}
         switch (colName) {
-            case "reservations":
-                _val = docSnap.data() ? docSnap.data().reservations : []
-                if (!_val) {
-                    _val = []
+            case "court_reservations":
+                _val = docSnap.data() ? docSnap.data() : {}
+                if (!_val[data.date]) {
+                    _val[data.date] = []
                 }
-                if (isArray(data)) {
-                    _val.push(...data)
-                } else {
-                    _val.push(data)
-                }
-                docs["reservations"] = _val
+                _val[data.date].push(data)
+                docs = _val
                 break;
-            case "reservations_by_date": //TODO - there is a param that is missing
-            case "schedule_by_weekday": //TODO
+            case "user_reservations":
+                break;
+            case "reservations_by_date": //TODO - remove
+            case "schedule_by_weekday": //TODO - remove
                 break;
             case "events":
             _val = docSnap.data() ? docSnap.data().events : []

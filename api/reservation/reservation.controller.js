@@ -32,16 +32,16 @@ export async function getCredit(req, res) {
     res.send(result)
   }
 }
+// export async function getReservationsByDate(req, res) {
+//   const result = await getDocuments(db, "tau_dudisela", 'reservations_by_date', req.query.date)
+//   if (!result || !result.reservations) {
+//     res.send({reservations: []})
+//   }
+//   else {
+//     res.send(result)
+//   }
+// }
 
-export async function getReservationsByDate(req, res) {
-  const result = await getDocuments(db, "tau_dudisela", 'reservations_by_date', req.query.date)
-  if (!result || !result.reservations) {
-    res.send({reservations: []})
-  }
-  else {
-    res.send(result)
-  }
-}
 
 export async function getScheduleByWeekDay(req, res) {
   const result = await getDocuments(db, "tau_dudisela", 'schedule_by_weekday', req.query.weekday)
@@ -79,15 +79,10 @@ export async function postScheduleByWeekDay(req, res) {
 
 export async function addReservation(req, res) {
   const _uuid = uuidv4()
-  const payload = {
-    'id': _uuid,
-    'startHour': req.body.startHour,
-    'endHour': req.body.endHour,
-    'courtNumber': req.body.courtNumber,
-    "date": req.body.date,
-    'username': req.body.username
-  }
-  addDocument(db, "tau_dudisela", "reservations" ,"reservations", req.query.docId, payload, (result) => {
+  const payload = req.body
+  payload['id'] = _uuid
+
+  addDocument(db, "tau_dudisela", "court_reservations" ,"court_reservations", payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
