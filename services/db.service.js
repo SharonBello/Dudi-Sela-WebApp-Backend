@@ -6,11 +6,30 @@ const initializedFirebase = initializeApp(firebaseConfig)
 export const db = getFirestore(initializedFirebase)
 
 
-export async function getDocuments(db, docName, docId) {
-    const docRef = doc(db, docName, docId)
+export async function getDocuments(db, docName, colName, data) {
+    const docRef = doc(db, docName, colName)
     const docSnap = await getDoc(docRef)
-    if (!docSnap.exists()) {
-        console.log(docName + " no such document fo " + docId)
+    let _val
+    switch (colName) {
+        case "user_reservations":
+            _val = docSnap.data() ? docSnap.data() : {}
+            if (_val[data.uid]) {
+                return ({"reservations": _val[data.uid]})
+            } else {
+                return {reservations: []}
+            }
+            break;
+        case "court_reservations":
+            _val = docSnap.data() ? docSnap.data() : {}
+            if (_val[data.date]) {
+                const reservation = _val[data.date].filter(datum => datum.id === data.refId)
+                return reservation
+            } else {
+                return {}
+            }
+            break;
+        default:
+            break;
     }
     return docSnap.data()
 }
@@ -42,6 +61,16 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
 
         let _val, docs = {}
         switch (colName) {
+            case "user_reservations":
+                _val = docSnap.data() ? docSnap.data() : {}
+                if (!_val[data.uid]) {
+                    _val[data.uid] = []
+                }
+                const uid = data.uid
+                delete data.uid
+                _val[uid].push(data)
+                docs = _val
+                break;
             case "court_reservations":
                 _val = docSnap.data() ? docSnap.data() : {}
                 if (!_val[data.date]) {
@@ -138,8 +167,8 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
                     }
                     docs["club_events"] = _val
                     break;
-                    default:
-                break;
+                default:
+                    break;
         }
         if (Object.keys(docs).length >0) {
             setDoc(docRef, docs).then((result) => {

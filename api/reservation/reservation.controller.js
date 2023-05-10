@@ -1,8 +1,17 @@
 import { getDocuments, resetCollection, addDocument, deleteDocument, editDocument, db } from '../../services/db.service.js'
 import { v4 as uuidv4 } from 'uuid'
-// TODO: implement reservations scheulde by date and weekday from within tau_dudisella
+export async function getUserReservations(req, res) {
+  const result = await getDocuments(db, "tau_dudisela", "user_reservations", req.body)
+  res.send(result)
+}
+
+export async function getReservationByDate(req, res) {
+  const result = await getDocuments(db, "tau_dudisela", "court_reservations", req.body)
+  res.send(result)
+}
+
 export async function getReservations(req, res) {
-  const result = await getDocuments(db, "tau_dudisela", "reservations" ,'reservations', req.query.docId)
+  const result = await getDocuments(db, "tau_dudisela", "reservations" ,'reservations')
   if (!result || !result.reservations) {
     res.send({reservations: []})
   }
@@ -13,7 +22,7 @@ export async function getReservations(req, res) {
 
 
 export async function isReservationExists(req, res) {
-  const result = await getDocuments(db, "tau_dudisela", "reservations", 'reservations', req.query.docId)
+  const result = await getDocuments(db, "tau_dudisela", "reservations", 'reservations')
   let foundReservation = false;
   result && result.reservations && result.reservations.forEach(reservation => {
     if (req.body.date === reservation.date && req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour && req.body.username === reservation.username) {
@@ -24,7 +33,7 @@ export async function isReservationExists(req, res) {
 }
 
 export async function getCredit(req, res) {
-  const result = await getDocuments(db, "tau_dudisela", 'user_credit', req.query.docId)
+  const result = await getDocuments(db, "tau_dudisela", 'user_credit')
   if (!result || !result.user_credit) {
     res.send({user_credit: 0})
   }
@@ -84,7 +93,22 @@ export async function addReservation(req, res) {
 
   addDocument(db, "tau_dudisela", "court_reservations" ,"court_reservations", payload, (result) => {
     if (!result) {
-      res.end(JSON.stringify({ "result": 0 }))
+      res.end(JSON.stringify({ "result": 0, 'id': payload['id'] }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
+export async function addReservationToUser(req, res) {
+  const _uuid = uuidv4()
+  const payload = req.body
+  payload['id'] = _uuid
+
+  addDocument(db, "tau_dudisela", "user_reservations" ,"user_reservations", payload, (result) => {
+    if (!result) {
+      res.end(JSON.stringify({ "result": 0, 'id': payload['id'] }))
     }
     else {
       res.end(JSON.stringify({ "result": 1 }))
