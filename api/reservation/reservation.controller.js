@@ -33,7 +33,9 @@ export async function isReservationExists(req, res) {
 }
 
 export async function getCredit(req, res) {
-  const result = await getDocuments(db, "tau_dudisela", 'user_credit')
+  const data = req.body
+  data['uid'] = req.query.docId
+  const result = await getDocuments(db, "tau_dudisela", 'user_credit', data)
   if (!result || !result.user_credit) {
     res.send({user_credit: 0})
   }
@@ -118,9 +120,10 @@ export async function addReservationToUser(req, res) {
 
 export async function changeCredit(req, res) {
   const payload = {
-    'user_credit': req.body.userCredit
+    'user_credit': req.body.userCredit,
+    'uid': req.query.docId
   }
-  editDocument(db, "tau_dudisela", "user_credit", "user_credit", req.query.docId, payload, (result) => {
+  editDocument(db, "tau_dudisela", "user_credit", "user_credit", payload, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
