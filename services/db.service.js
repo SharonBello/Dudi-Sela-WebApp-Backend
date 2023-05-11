@@ -229,27 +229,36 @@ export async function deleteDocument(db, docName, docId, colName, data, fn) {
     try {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
-        let _val, docs={}
+        let _val, docs
         let index
+
         switch (colName) {
-            case "reservations":
-                _val = docSnap.data() ? docSnap.data().reservations : []
+            case "user_reservations":
+                docs = docSnap.data()
+                _val = docs[data['uid']]
                 index = _val.findIndex(reservation => reservation.id === data.id )
                 _val.splice(index, 1)
-                docs["reservations"] = _val
+                docs[data['uid']] = _val
                 break;
-            case "price_constraints":
-                _val = docSnap.data() ? docSnap.data().price_constraints : []
-                index = _val.findIndex(constraint => constraint.id === data.id )
+            case "court_reservations":
+                docs = docSnap.data()
+                _val = docs[data['date']]
+                index = _val.findIndex(reservation => reservation.id === data.refResId )
                 _val.splice(index, 1)
-                    docs["price_constraints"] = _val
+                docs[data['date']] = _val
                 break;
-            case "club_hours":
-                _val = docSnap.data() ? docSnap.data().club_hours : []
-                index = _val.findIndex(club_hour => club_hour.id === data.id )
-                _val.splice(index, 1)
-                    docs["club_hours"] = _val
-                break;
+            // case "price_constraints":
+            //     _val = docSnap.data() ? docSnap.data().price_constraints : []
+            //     index = _val.findIndex(constraint => constraint.id === data.id )
+            //     _val.splice(index, 1)
+            //         docs["price_constraints"] = _val
+            //     break;
+            // case "club_hours":
+            //     _val = docSnap.data() ? docSnap.data().club_hours : []
+            //     index = _val.findIndex(club_hour => club_hour.id === data.id )
+            //     _val.splice(index, 1)
+            //         docs["club_hours"] = _val
+            //     break;
             default:
                 break;
         }

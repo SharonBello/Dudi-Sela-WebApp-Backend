@@ -132,14 +132,20 @@ export async function changeCredit(req, res) {
 
 export async function deleteReservation(req, res) {
   const data = req.body;
-  deleteDocument(db, "tau_dudisela", "reservations", "reservations", req.query.docId, data, (result) => {
-    if (!result) {
+  const deleteUserReservation = new Promise((resolve, reject) => {
+      data['uid'] = req.query.docId
+      deleteDocument(db, "tau_dudisela", "user_reservations", "user_reservations", data, resolve)
+  });
+  const deleteCourtReservation = new Promise((resolve, reject) => {
+    deleteDocument(db, "tau_dudisela", "court_reservations", "court_reservations", data, resolve)
+  });
+  Promise.all([deleteUserReservation, deleteCourtReservation]).then((result) => {
+    if (!result[0] && !result[1]) {
       res.end(JSON.stringify({ "result": 0 }))
-    }
-    else {
+    } else {
       res.end(JSON.stringify({ "result": 1 }))
     }
-  })
+  });
 }
 
 export async function addReservationByDate(req, res) {
@@ -153,19 +159,6 @@ export async function addReservationByDate(req, res) {
     'username': req.body.username
   }
   addDocument(db, "tau_dudisela", "reservations_by_date", "reservations_by_date", req.query.date, payload, (result) => {
-    if (!result) {
-      res.end(JSON.stringify({ "result": 0 }))
-    }
-    else {
-      res.end(JSON.stringify({ "result": 1 }))
-    }
-  })
-}
-
-
-export async function deleteReservationByDate(req, res) {
-  const data = req.body;
-  deleteDocument(db, "tau_dudisela", "reservations_by_date", "reservations_by_date", req.query.date, data, (result) => {
     if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
