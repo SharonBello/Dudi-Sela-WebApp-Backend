@@ -22,10 +22,19 @@ export async function getDocuments(db, docName, colName, data) {
         case "court_reservations":
             _val = docSnap.data() ? docSnap.data() : {}
             if (_val[data.date]) {
-                const reservation = _val[data.date].filter(datum => datum.id === data.refId)
-                return reservation
+                const reservations = _val[data.date]
+                return reservations
             } else {
-                return {}
+                return []
+            }
+            break;
+        case "club_events":
+            _val = docSnap.data() ? docSnap.data() : {}
+            if (_val[data.dayofweek]) {
+                const reservations = _val[data.dayofweek]
+                return reservations
+            } else {
+                return []
             }
             break;
         case "user_credit":
@@ -151,32 +160,28 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
                     _val.push(data)
                 }
                 docs["club_hours"] = _val
-                case "club_classes":
-                    _val = docSnap.data() ? docSnap.data().club_classes : []
-                    if (!_val) {
-                        _val = []
-                    }
-                    if (isArray(data)) {
-                        _val.push(...data)
-                    } else {
-                        _val.push(data)
-                    }
-                    docs["club_classes"] = _val
-                    break;
-                case "club_events":
-                    _val = docSnap.data() ? docSnap.data().club_events : []
-                    if (!_val) {
-                        _val = []
-                    }
-                    if (isArray(data)) {
-                        _val.push(...data)
-                    } else {
-                        _val.push(data)
-                    }
-                    docs["club_events"] = _val
-                    break;
-                default:
-                    break;
+            case "club_classes":
+                _val = docSnap.data() ? docSnap.data().club_classes : []
+                if (!_val) {
+                    _val = []
+                }
+                if (isArray(data)) {
+                    _val.push(...data)
+                } else {
+                    _val.push(data)
+                }
+                docs["club_classes"] = _val
+                break;
+            case "club_events":
+                _val = docSnap.data()
+                if (!_val[data.dayOfWeek]) {
+                    _val[data.dayOfWeek] = []
+                }
+                _val[data.dayOfWeek].push(data)
+                docs = _val
+                break;
+            default:
+                break;
         }
         if (Object.keys(docs).length >0) {
             setDoc(docRef, docs).then((result) => {

@@ -10,16 +10,10 @@ export async function getReservationByDate(req, res) {
   res.send(result)
 }
 
-export async function getReservations(req, res) {
-  const result = await getDocuments(db, "tau_dudisela", "reservations" ,'reservations')
-  if (!result || !result.reservations) {
-    res.send({reservations: []})
-  }
-  else {
-    res.send(result)
-  }
+export async function getReservationByDayofweek(req, res) {
+  const result = await getDocuments(db, "tau_dudisela", "club_events", req.body)
+  res.send(result)
 }
-
 
 export async function isReservationExists(req, res) {
   const result = await getDocuments(db, "tau_dudisela", "reservations", 'reservations')
@@ -43,16 +37,6 @@ export async function getCredit(req, res) {
     res.send(result)
   }
 }
-// export async function getReservationsByDate(req, res) {
-//   const result = await getDocuments(db, "tau_dudisela", 'reservations_by_date', req.query.date)
-//   if (!result || !result.reservations) {
-//     res.send({reservations: []})
-//   }
-//   else {
-//     res.send(result)
-//   }
-// }
-
 
 export async function getScheduleByWeekDay(req, res) {
   const result = await getDocuments(db, "tau_dudisela", 'schedule_by_weekday', req.query.weekday)
