@@ -258,18 +258,20 @@ export async function deleteDocument(db, docName, docId, colName, data, fn) {
                 _val.splice(index, 1)
                 docs[data['date']] = _val
                 break;
-            // case "price_constraints":
-            //     _val = docSnap.data() ? docSnap.data().price_constraints : []
-            //     index = _val.findIndex(constraint => constraint.id === data.id )
-            //     _val.splice(index, 1)
-            //         docs["price_constraints"] = _val
-            //     break;
-            // case "club_hours":
-            //     _val = docSnap.data() ? docSnap.data().club_hours : []
-            //     index = _val.findIndex(club_hour => club_hour.id === data.id )
-            //     _val.splice(index, 1)
-            //         docs["club_hours"] = _val
-            //     break;
+            case "price_constraints":
+                docs = docSnap.data()
+                _val = docSnap.data() ? docSnap.data().price_constraints : []
+                index = _val.findIndex(constraint => constraint.id === data.id )
+                _val.splice(index, 1)
+                docs["price_constraints"] = _val
+                break;
+            case "club_hours":
+                docs = docSnap.data()
+                _val = docSnap.data() ? docSnap.data().club_hours : []
+                index = _val.findIndex(club_hour => club_hour.id === data.id )
+                _val.splice(index, 1)
+                docs["club_hours"] = _val
+                break;
             default:
                 break;
         }
