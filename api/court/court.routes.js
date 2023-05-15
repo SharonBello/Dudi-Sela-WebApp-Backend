@@ -1,5 +1,5 @@
 import express from 'express'
-import { getCourts, deleteClubHours, getUserPermissions, getClubClasses, getClubUsers, getAboutClub, getClubPreferences, editClubPreferences, editAboutClub, getPunchCards, addClubClass, addPunchCard, getClubHours, addClubHours, getClubCourts, getPriceConstraints, addClubCourt, getSportCenterMembers, addPriceConstraint, editPriceConstraint, deletePriceConstraint } from './court.controller.js'
+import { getCourts, deleteClubHours, getUserPermissions, getClubClasses, isAdminUser, getClubUsers, getAboutClub, getClubPreferences, editClubPreferences, editAboutClub, getPunchCards, addClubClass, addPunchCard, getClubHours, addClubHours, getClubCourts, getPriceConstraints, addClubCourt, getSportCenterMembers, addPriceConstraint, editPriceConstraint, deletePriceConstraint } from './court.controller.js'
 
 export const courtRoutes = express.Router()
 
@@ -24,5 +24,6 @@ courtRoutes.post('/clubhours/addClubHours', addClubHours)
 courtRoutes.delete('/clubhours', deleteClubHours)
 courtRoutes.post('/clubpreferences', editClubPreferences)
 courtRoutes.post('/aboutclub', editAboutClub)
+courtRoutes.post('/adminusers', isAdminUser)
 
 

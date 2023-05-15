@@ -37,12 +37,24 @@ export async function getDocuments(db, docName, colName, data) {
                 return []
             }
             break;
+        case "club_users":
+            _val = docSnap.data()
+            return _val["club_users"]
+            break;
         case "user_credit":
             _val = docSnap.data() ? docSnap.data() : {}
             if (_val[data.uid]) {
                 return (_val[data.uid])
             } else {
                 return {"user_credit": 0}
+            }
+            break;
+        case "admin_users":
+            _val = docSnap.data()
+            if (_val['uids'].includes(data.uid)) {
+                return true
+            } else {
+                return false
             }
             break;
         default:
