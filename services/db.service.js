@@ -57,6 +57,10 @@ export async function getDocuments(db, docName, colName, data) {
                 return false
             }
             break;
+        case "club_hours":
+            _val = docSnap.data()
+            return _val['club_hours']
+            break
         default:
             break;
     }
@@ -172,6 +176,7 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
                     _val.push(data)
                 }
                 docs["club_hours"] = _val
+                break;
             case "club_classes":
                 _val = docSnap.data() ? docSnap.data().club_classes : []
                 if (!_val) {
