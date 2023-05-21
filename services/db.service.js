@@ -218,6 +218,7 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
         const docRef = doc(db, docName, docId)
         const docSnap = await getDoc(docRef)
         let _val, docs={}
+        let index
         switch (colName) {
             case "user_credit":
                 _val = docSnap.data() ? docSnap.data() : {}
@@ -229,7 +230,7 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
                 break;
             case "price_constraints":
                 _val = docSnap.data() ? docSnap.data().price_constraints : 0
-                const index = _val.findIndex(constraint => constraint.id === data.id )
+                index = _val.findIndex(constraint => constraint.id === data.id )
                 _val[index] = data
                 docs["price_constraints"] = _val
                 break;
@@ -242,6 +243,12 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
                 _val = docSnap.data() ? docSnap.data().about_club : 0
                 _val = data
                 docs["about_club"] = _val
+                break;
+            case "club_events":
+                _val = docSnap.data()
+                index = _val[data.dayOfWeek].findIndex(event => event.id === data.id )
+                _val[data.dayOfWeek][index] = data
+                docs = _val
                 break;
             default:
                 break;
@@ -293,6 +300,13 @@ export async function deleteDocument(db, docName, docId, colName, data, fn) {
                 index = _val.findIndex(club_hour => club_hour.id === data.id )
                 _val.splice(index, 1)
                 docs["club_hours"] = _val
+                break;
+            case "club_events":
+                docs = docSnap.data()
+                _val = docSnap.data()[data.dayOfWeek]
+                index = _val.findIndex(event => event.id === data.id )
+                _val.splice(index, 1)
+                docs[data.dayOfWeek] = _val
                 break;
             default:
                 break;

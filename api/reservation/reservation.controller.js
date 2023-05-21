@@ -135,6 +135,20 @@ export async function deleteReservation(req, res) {
   });
 }
 
+export async function deleteEvent(req, res) {
+  const data = req.body;
+  const deleteClubEvent = new Promise((resolve, reject) => {
+      deleteDocument(db, "tau_dudisela", "club_events", "club_events", data, resolve)
+  });
+  Promise.all([deleteClubEvent]).then((result) => {
+    if (!result[0]) {
+      res.end(JSON.stringify({ "result": 0 }))
+    } else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  });
+}
+
 export async function addReservationByDate(req, res) {
   const _uuid = uuidv4()
   const payload = {
