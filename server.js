@@ -63,5 +63,5 @@ app.get('/**', (req, res) => {
 })
 
 httpServer.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`Court reservation app listening on port ${port}`)
 })
