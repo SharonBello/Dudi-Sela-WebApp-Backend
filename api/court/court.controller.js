@@ -96,6 +96,18 @@ export async function addPunchCard(req, res) {
   })
 }
 
+export async function editPunchCard(req, res) {
+  const payload = req.body
+  editDocument(db, "tau_dudisela", 'punch_cards', 'punch_cards', req.body, (result) => {
+      if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
 
 export async function addClubClass(req, res) {
   const _uuid = uuidv4()

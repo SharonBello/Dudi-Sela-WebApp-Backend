@@ -256,6 +256,12 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
                 _val["club_courts"][index] = data
                 docs = _val
                 break;
+            case "punch_cards":
+                _val = docSnap.data()
+                index = _val["punch_cards"].findIndex(card => card.id === data.id )
+                _val["punch_cards"][index] = data
+                docs = _val
+                break;
             default:
                 break;
         }
