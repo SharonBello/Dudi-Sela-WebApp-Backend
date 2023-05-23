@@ -8,3 +8,12 @@ export async function getInstructors(req, res) {
     res.send(result)
   }
 }
+
+export async function getParticipants(req, res) {
+  const result = await getDocuments(db, "tau_dudisela", 'class_participants', 'class_participants')
+  if (!result) {
+    res.send({class_participants: []})
+  } else {
+    res.send(result)
+  }
+}
