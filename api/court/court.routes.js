@@ -1,5 +1,5 @@
 import express from 'express'
-import { getCourts, deleteClubHours, getUserPermissions, getClubClasses, isAdminUser, getClubUsers, getAboutClub, getClubPreferences, editClubPreferences, editAboutClub, getPunchCards, addClubClass, addPunchCard, getClubHours, addClubHours, getClubCourts, getPriceConstraints, addClubCourt, getSportCenterMembers, addPriceConstraint, editPriceConstraint, deletePriceConstraint } from './court.controller.js'
+import { getCourts, deleteClubCourt, editClubCourt, deleteClubHours, getUserPermissions, getClubClasses, isAdminUser, getClubUsers, getAboutClub, getClubPreferences, editClubPreferences, editAboutClub, getPunchCards, addClubClass, addPunchCard, getClubHours, addClubHours, getClubCourts, getPriceConstraints, addClubCourt, getSportCenterMembers, addPriceConstraint, editPriceConstraint, deletePriceConstraint } from './court.controller.js'
 
 export const courtRoutes = express.Router()
 
@@ -10,9 +10,11 @@ courtRoutes.get('/clubpreferences', getClubPreferences)
 courtRoutes.get('/priceconstraints', getPriceConstraints)
 courtRoutes.post('/sportCenterMembers', getSportCenterMembers)
 courtRoutes.post('/clubcourts/addClubCourt', addClubCourt)
+courtRoutes.post('/clubcourts/editClubCourt', editClubCourt)
 courtRoutes.post('/clubcourts/addPriceConstraint', addPriceConstraint)
 courtRoutes.post('/clubcourts/editPriceConstraint', editPriceConstraint)
 courtRoutes.delete('/clubcourts', deletePriceConstraint)
+courtRoutes.delete('/clubcourts/court', deleteClubCourt)
 courtRoutes.get('/punchcards', getPunchCards)
 courtRoutes.get('/clubclasses', getClubClasses)
 courtRoutes.get('/clubusers', getClubUsers)
