@@ -244,11 +244,6 @@ export async function getClubUsers(req, res) {
   }
 }
 
-export async function isAdminUser(req, res) {
-  const result = await getDocuments(db, 'tau_dudisela', 'admin_users', req.body)
-  res.send(result)
-}
-
 export async function getUserPermissions(req, res) {
   const result = await getDocuments(db, 'tau_dudisela', 'user_permissions', 'user_permissions')
   if (!result) {
