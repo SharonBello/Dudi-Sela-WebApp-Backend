@@ -67,6 +67,22 @@ export async function getDocuments(db, docName, colName, data) {
     return docSnap.data()
 }
 
+export async function getDocument(db, docName, colName, data) {
+    const docRef = doc(db, docName, colName)
+    const docSnap = await getDoc(docRef)
+    let _val, index
+    switch (colName) {
+        case "club_users":
+            _val = docSnap.data().club_users
+            index = _val.findIndex(user => user.email === data.email )
+            return _val[index]
+            break;
+        default:
+            break;
+    }
+    return docSnap.data()
+}
+
 const isArray = (obj) => {
     return Object.prototype.toString.call(obj) === '[object Array]';
 }

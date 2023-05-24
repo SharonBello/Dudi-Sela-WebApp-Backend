@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { getDocuments, db, addDocument, deleteDocument, editDocument } from '../../services/db.service.js'
+import { getDocuments, getDocument, db, addDocument, deleteDocument, editDocument } from '../../services/db.service.js'
 
 export async function getCourts(req, res) {
   const result = await getDocuments(db, 'tau_dudisela', 'courts', 'courts')
@@ -262,6 +262,15 @@ export async function getClubHours(req, res) {
   const result = await getDocuments(db, 'tau_dudisela', 'club_hours', 'club_hours')
   if (!result) {
     res.send({club_hours: []})
+  } else {
+    res.send(result)
+  }
+}
+
+export async function getUser(req, res) {
+  const result = await getDocument(db, 'tau_dudisela', 'club_users', req.body)
+  if (!result) {
+    res.send({club_user: ""})
   } else {
     res.send(result)
   }
