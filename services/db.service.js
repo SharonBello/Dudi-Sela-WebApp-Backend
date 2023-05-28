@@ -275,7 +275,13 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
                 _val["punch_cards"][index] = data
                 docs = _val
                 break;
-            default:
+            case "club_users":
+                _val = docSnap.data()
+                index = _val["club_users"].findIndex(user => user.id === data.id )
+                _val["club_users"][index] = data
+                docs = _val
+                break;
+                default:
                 break;
         }
         setDoc(docRef, docs).then((result) => {
@@ -339,6 +345,13 @@ export async function deleteDocument(db, docName, docId, colName, data, fn) {
                 index = _val.findIndex(event => event.id === data.id )
                 _val.splice(index, 1)
                 docs[data.dayOfWeek] = _val
+                break;
+            case "club_users":
+                docs = docSnap.data()
+                _val =docSnap.data().club_users
+                index = _val.findIndex(club_user => club_user.id === data.id )
+                _val.splice(index, 1)
+                docs["club_users"] = _val
                 break;
             default:
                 break;

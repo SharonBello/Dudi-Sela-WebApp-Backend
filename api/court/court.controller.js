@@ -110,6 +110,39 @@ export async function addClubUser(req, res) {
   })
 }
 
+export async function deleteClubUser(req, res) {
+  deleteDocument(db, "tau_dudisela", 'club_users', 'club_users', req.body, (result) => {
+      if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
+export async function saveClubUser(req, res) {
+  addDocument(db, "tau_dudisela", 'club_users', 'club_users', req.body, (result) => {
+      if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
+export async function editClubUser(req, res) {
+  editDocument(db, "tau_dudisela", 'club_users', 'club_users', req.body, (result) => {
+      if (!result) {
+      res.end(JSON.stringify({ "result": 0 }))
+    }
+    else {
+      res.end(JSON.stringify({ "result": 1 }))
+    }
+  })
+}
+
 export async function editPunchCard(req, res) {
   const payload = req.body
   editDocument(db, "tau_dudisela", 'punch_cards', 'punch_cards', req.body, (result) => {
