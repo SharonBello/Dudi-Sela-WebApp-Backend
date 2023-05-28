@@ -1,6 +1,6 @@
 export function authUser(permissions) {
     return (req, res, next) => {
-        const userRole = req.body.role
+        const userRole = req.headers.role
         if (permissions.includes(userRole)) {
             next()
         } else {
