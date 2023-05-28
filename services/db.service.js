@@ -205,6 +205,11 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
                 _val[data.dayOfWeek].push(data)
                 docs = _val
                 break;
+            case "club_users":
+                _val =docSnap.data().club_users
+                _val.push(data)
+                docs["club_users"] = _val
+                break;
             default:
                 break;
         }
