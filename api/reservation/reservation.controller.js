@@ -38,6 +38,17 @@ export async function getCredit(req, res) {
   }
 }
 
+export async function getUsersCredit(req, res) {
+  const data = req.body
+  const result = await getDocuments(db, "tau_dudisela", 'user_credit')
+  if (!result || !result.users_credit) {
+    res.send({users_credit: []})
+  }
+  else {
+    res.send(result)
+  }
+}
+
 export async function getScheduleByWeekDay(req, res) {
   const result = await getDocuments(db, "tau_dudisela", 'schedule_by_weekday', req.query.weekday)
   if (!result || !result.reservations) {
@@ -105,6 +116,8 @@ export async function addReservationToUser(req, res) {
 export async function changeCredit(req, res) {
   const payload = {
     'user_credit': req.body.userCredit,
+    'date': req.body.date,
+    'mail': req.body.mail,
     'uid': req.query.docId
   }
   editDocument(db, "tau_dudisela", "user_credit", "user_credit", payload, (result) => {

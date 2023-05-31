@@ -43,8 +43,10 @@ export async function getDocuments(db, docName, colName, data) {
             break;
         case "user_credit":
             _val = docSnap.data() ? docSnap.data() : {}
-            if (_val[data.uid]) {
-                return (_val[data.uid])
+            if (!data) {
+                return {"users_credit": _val}
+            } else if (_val[data.uid]) {
+                    return (_val[data.uid])
             } else {
                 return {"user_credit": 0}
             }
@@ -236,7 +238,7 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
             case "user_credit":
                 _val = docSnap.data() ? docSnap.data() : {}
                 if (!_val[data.uid]) {
-                    _val[data.uid] = {"user_credit": 0}
+                    _val[data.uid] = {"user_credit": 0, "mail": data.mail, "date": data.date}
                 }
                 _val[data.uid]["user_credit"] += data.user_credit
                 docs = _val
