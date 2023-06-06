@@ -101,7 +101,7 @@ export async function addClubUser(req, res) {
   const payload = req.body
   payload['id'] = _uuid
   addDocument(db, "tau_dudisela", 'club_users', 'club_users', req.body, (result) => {
-      if (!result) {
+    if (!result) {
       res.end(JSON.stringify({ "result": 0 }))
     }
     else {

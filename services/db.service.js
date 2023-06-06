@@ -212,7 +212,12 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
                 _val.push(data)
                 docs["club_users"] = _val
                 break;
-            default:
+            case "class_participants":
+                _val =docSnap.data().class_participants
+                _val.push(data.name)
+                docs["class_participants"] = _val
+            break;
+                default:
                 break;
         }
         if (Object.keys(docs).length >0) {
