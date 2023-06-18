@@ -282,13 +282,19 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
                 _val["punch_cards"][index] = data
                 docs = _val
                 break;
+            case "club_classes":
+                _val = docSnap.data()
+                index = _val["club_classes"].findIndex(course => course.id === data.id )
+                _val["club_classes"][index] = data
+                docs = _val
+                break;
             case "club_users":
                 _val = docSnap.data()
                 index = _val["club_users"].findIndex(user => user.id === data.id )
                 _val["club_users"][index] = data
                 docs = _val
                 break;
-                default:
+            default:
                 break;
         }
         setDoc(docRef, docs).then((result) => {

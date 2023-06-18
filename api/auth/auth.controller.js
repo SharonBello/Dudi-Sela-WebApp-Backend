@@ -6,23 +6,23 @@ import { getAuth, signOut } from "firebase/auth"
 const auth = getAuth(initializeApp(getFirebaseConfig()))
 
 export function signin(req, res) {
-    signinUser(req.body.email, req.body.password, (user) => {
-        if (!user.uid) {
-            res.end(JSON.stringify({ "result": 1 }))
+    signinUser(req.body.email, req.body.password, (result) => {
+        if (result.message) {
+            res.end(JSON.stringify({ "message": result.message }))
         }
         else {
-            res.end(JSON.stringify({ "uid": user.uid }))
+            res.end(JSON.stringify({ "uid": result }))
         }
     })
 }
 
 export function signup(req, res) {
-    createUser(req.body.email, req.body.password, (uid) => {
-        if (!uid) {
-            res.end(JSON.stringify({ "result": "1" }))
+    createUser(req.body.email, req.body.password, (result) => {
+        if (result.message) {
+            res.end(JSON.stringify({ "message": result.message }))
         }
         else {
-            res.end(JSON.stringify({ "uid": uid }))
+            res.end(JSON.stringify({ "uid": result }))
         }
     })
 }

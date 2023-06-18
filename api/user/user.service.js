@@ -16,7 +16,7 @@ export function signinUser(email, password, fn) {
                 const errorCode = error.code
                 const errorMessage = error.message
                 console.error(error)
-                fn(errorCode)
+                fn(error)
             }
         })
 }
@@ -30,6 +30,6 @@ export function createUser(email, password, fn) {
         .catch((error) => {
             const errorCode = error.code
             const errorMessage = error.message
-            fn(errorCode)
+            fn(error)
         })
 }
