@@ -7,74 +7,84 @@ export const db = getFirestore(initializedFirebase)
 
 
 export async function getDocuments(db, docName, colName, data) {
-    const docRef = doc(db, docName, colName)
-    const docSnap = await getDoc(docRef)
-    let _val
-    switch (colName) {
-        case "user_reservations":
-            _val = docSnap.data() ? docSnap.data() : {}
-            if (_val[data.uid]) {
-                return ({"reservations": _val[data.uid]})
-            } else {
-                return {reservations: []}
-            }
-            break;
-        case "court_reservations":
-            _val = docSnap.data() ? docSnap.data() : {}
-            if (_val[data.date]) {
-                const reservations = _val[data.date]
-                return reservations
-            } else {
-                return []
-            }
-            break;
-        case "club_events":
-            _val = docSnap.data() ? docSnap.data() : {}
-            if (_val[data.dayofweek]) {
-                const reservations = _val[data.dayofweek]
-                return reservations
-            } else {
-                return []
-            }
-            break;
-        case "club_users":
-            _val = docSnap.data()
-            return _val["club_users"]
-            break;
-        case "user_credit":
-            _val = docSnap.data() ? docSnap.data() : {}
-            if (!data) {
-                return {"users_credit": _val}
-            } else if (_val[data.uid]) {
-                    return (_val[data.uid])
-            } else {
-                return {"user_credit": 0}
-            }
-            break;
-        case "club_hours":
-            _val = docSnap.data()
-            return _val['club_hours']
-            break
-        default:
-            break;
+    try {
+        const docRef = doc(db, docName, colName)
+        const docSnap = await getDoc(docRef)
+        let _val
+        switch (colName) {
+            case "user_reservations":
+                _val = docSnap.data() ? docSnap.data() : {}
+                if (_val[data.uid]) {
+                    return ({"reservations": _val[data.uid]})
+                } else {
+                    return {reservations: []}
+                }
+                break;
+            case "court_reservations":
+                _val = docSnap.data() ? docSnap.data() : {}
+                if (_val[data.date]) {
+                    const reservations = _val[data.date]
+                    return reservations
+                } else {
+                    return []
+                }
+                break;
+            case "club_events":
+                _val = docSnap.data() ? docSnap.data() : {}
+                if (_val[data.dayofweek]) {
+                    const reservations = _val[data.dayofweek]
+                    return reservations
+                } else {
+                    return []
+                }
+                break;
+            case "club_users":
+                _val = docSnap.data()
+                return _val["club_users"]
+                break;
+            case "user_credit":
+                _val = docSnap.data() ? docSnap.data() : {}
+                if (!data) {
+                    return {"users_credit": _val}
+                } else if (_val[data.uid]) {
+                        return (_val[data.uid])
+                } else {
+                    return {"user_credit": 0}
+                }
+                break;
+            case "club_hours":
+                _val = docSnap.data()
+                return _val['club_hours']
+                break
+            default:
+                break;
+        }
+        return docSnap.data()
+    } catch(error) {
+        console.log(error)
+        return;
     }
-    return docSnap.data()
 }
 
 export async function getDocument(db, docName, colName, data) {
-    const docRef = doc(db, docName, colName)
-    const docSnap = await getDoc(docRef)
-    let _val, index
-    switch (colName) {
-        case "club_users":
-            _val = docSnap.data().club_users
-            index = _val.findIndex(user => user.email === data.email )
-            return _val[index]
-            break;
-        default:
-            break;
+    try {
+        const docRef = doc(db, docName, colName)
+        const docSnap = await getDoc(docRef)
+        let _val, index
+        switch (colName) {
+            case "club_users":
+                _val = docSnap.data().club_users
+                index = _val.findIndex(user => user.email === data.email )
+                return _val[index]
+                break;
+            default:
+                break;
+        }
+        return docSnap.data()
+    } catch (error) {
+        console.log(error)
+        return;
     }
-    return docSnap.data()
 }
 
 const isArray = (obj) => {
@@ -230,6 +240,7 @@ export async function addDocument(db, docName, docId, colName, data, fn) {
         }
     } catch (error) {
         console.error(error)
+        return;
     }
 }
 
@@ -305,6 +316,7 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
         })
     } catch (error) {
         fn(error)
+        return;
     }
 
 }
@@ -377,5 +389,6 @@ export async function deleteDocument(db, docName, docId, colName, data, fn) {
         })
     } catch (error) {
         console.error(error)
+        return;
     }
 }

@@ -16,10 +16,11 @@ export async function getReservationByDayofweek(req, res) {
 }
 
 export async function isReservationExists(req, res) {
-  const result = await getDocuments(db, "tau_dudisela", "reservations", 'reservations')
+  const data = req.body
+  const result = await getDocuments(db, "tau_dudisela", "court_reservations", data)
   let foundReservation = false;
-  result && result.reservations && result.reservations.forEach(reservation => {
-    if (req.body.date === reservation.date && req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour && req.body.username === reservation.username) {
+  result && result.forEach(reservation => {
+    if (req.body.courtNumber === reservation.courtNumber && req.body.startHour === reservation.startHour) {
       foundReservation = true;
     }
   });
