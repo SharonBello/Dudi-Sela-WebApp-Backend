@@ -119,6 +119,7 @@ export async function changeCredit(req, res) {
     'user_credit': req.body.userCredit,
     'date': req.body.date,
     'mail': req.body.mail,
+    'punch_cards': req.body.punch_cards,
     'uid': req.query.docId
   }
   editDocument(db, "tau_dudisela", "user_credit", "user_credit", payload, (result) => {
