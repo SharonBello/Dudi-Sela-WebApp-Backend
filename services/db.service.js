@@ -254,9 +254,17 @@ export async function editDocument(db, docName, docId, colName, data, fn) {
             case "user_credit":
                 _val = docSnap.data() ? docSnap.data() : {}
                 if (!_val[data.uid]) {
-                    _val[data.uid] = {"user_credit": 0, "mail": data.mail, "date": data.date, "punch_cards": data.punch_cards}
+                    _val[data.uid] = {"user_credit": 0, "mail": data.mail, "date": data.date, "punch_cards": []}
                 }
-                _val[data.uid]["user_credit"] += data.user_credit
+                if (data.cardName) {
+                    if (!_val[data.uid]["punch_cards"][data.cardName]) {
+                        _val[data.uid]["punch_cards"][data.cardName] = data.user_credit
+                    } else {
+                        _val[data.uid]["punch_cards"][data.cardName] += data.user_credit
+                    }
+                } else {
+                    _val[data.uid]["user_credit"] += data.user_credit
+                }
                 docs = _val
                 break;
             case "price_constraints":

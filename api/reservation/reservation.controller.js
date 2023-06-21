@@ -31,8 +31,8 @@ export async function getCredit(req, res) {
   const data = req.body
   data['uid'] = req.query.docId
   const result = await getDocuments(db, "tau_dudisela", 'user_credit', data)
-  if (!result || !result.user_credit) {
-    res.send({user_credit: 0})
+  if (!result) {
+    res.send({user_credit: 0, punch_cards: []})
   }
   else {
     res.send(result)
@@ -119,7 +119,7 @@ export async function changeCredit(req, res) {
     'user_credit': req.body.userCredit,
     'date': req.body.date,
     'mail': req.body.mail,
-    'punch_cards': req.body.punch_cards,
+    'cardName': req.body.cardName,
     'uid': req.query.docId
   }
   editDocument(db, "tau_dudisela", "user_credit", "user_credit", payload, (result) => {
