@@ -65,6 +65,7 @@ app.post('/signin', async(req, res) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        console.log(errorMessage)
       });
 })
 
@@ -79,20 +80,20 @@ app.post('/signout', async(req, res) => {
 });
 
 
-// function checkAuth(req, res, next) {
-//     if (req.headers.authToken) {
-//     admin.auth().verifyIdToken(req.headers.authToken)
-//         .then(() => {
-//             next()
-//         }).catch(() => {
-//             res.status(403).send('Unauthorized')
-//         });
-//     } else {
-//         res.status(403).send('Unauthorized')
-//     }
-// }
+function checkAuth(req, res, next) {
+    if (req.headers.authtoken) {
+    admin.auth().verifyIdToken(req.headers.authtoken)
+        .then(() => {
+            next()
+        }).catch(() => {
+            res.status(403).send('Unauthorized')
+        });
+    } else {
+        res.status(403).send('Unauthorized')
+    }
+}
 
-// app.use('/', checkAuth)
+app.use('/', checkAuth)
 app.use('/reservations', reservationRoutes)
 app.use('/courts', courtRoutes)
 app.use('/events', eventRoutes)
