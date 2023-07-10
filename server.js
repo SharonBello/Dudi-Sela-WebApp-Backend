@@ -49,6 +49,7 @@ app.post('/signup', async(req, res) => {
     .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        res.json(error)
         // ..
     });
 })
@@ -66,6 +67,7 @@ app.post('/signin', async(req, res) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage)
+        res.json(error)
       });
 })
 
